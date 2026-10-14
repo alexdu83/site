@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="only light">
+<meta name="theme-color" content="#ebe1cc">
 <title>Pierre Franchomme — Huiles essentielles</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Manrope:wght@500;700&display=swap" rel="stylesheet">
@@ -15,7 +17,6 @@
   --sans:'Manrope','Satoshi',ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b2a20;--fg:#e3d8c3;--muted:#c3bca4;--line:#3b4e3f;--alt:#223428;--card:#26392c}}
 :root[data-theme="dark"]{--bg:#1b2a20;--fg:#e3d8c3;--muted:#c3bca4;--line:#3b4e3f;--alt:#223428;--card:#26392c}
 html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
 *{box-sizing:border-box;margin:0}
@@ -256,7 +257,6 @@ body.det #detail{animation:fade .6s ease}
 
 /* ===== v2 : sections compartimentées, contraste, flacon animé ===== */
 :root{--canvas:#d3c7ae;--surface:#f6f0e2;--surface2:#ece3cd;--card:#fcf9f1;--line:#d9cfb7;--walnut:#6e6750}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--canvas:#101a13;--surface:#1c2c21;--surface2:#223428;--card:#26392c;--line:#36493b;--walnut:#a8a188}}
 :root[data-theme="dark"]{--canvas:#101a13;--surface:#1c2c21;--surface2:#223428;--card:#26392c;--line:#36493b;--walnut:#a8a188}
 body{background:var(--canvas)}
 body.det{background:var(--bg)}
@@ -410,6 +410,61 @@ footer{margin:16px;border-radius:24px;border:0}
 .tmp[hidden]{display:none}
 .fld textarea{background:transparent;border:1px solid var(--line);border-radius:14px;padding:14px;color:inherit;font:500 14px var(--sans);width:100%;resize:vertical}
 .p .dsc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ===== photos & contenance ===== */
+.vis,.dvis{overflow:hidden}
+.vis img,.dvis img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.22,.61,.36,1)}
+.vis .tag{z-index:1}
+.p:hover .vis img{transform:scale(1.05)}
+@media (max-width:760px){.dvis{position:relative}}
+.th{display:inline-block;vertical-align:middle;width:44px;height:44px;border-radius:10px;object-fit:cover;background:var(--alt);border:1px solid var(--line)}
+.ac td label.btn{padding:8px 12px;cursor:pointer;margin:0 6px}
+.ph{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.ph label.btn{cursor:pointer}
+.pv{width:96px;height:96px;border-radius:16px;border:1px dashed var(--line);display:grid;place-items:center;overflow:hidden;font-size:12px;color:var(--walnut);background:var(--alt);text-align:center;padding:6px}
+.pv img{width:100%;height:100%;object-fit:cover;display:block;margin:-6px}
+
+/* ===== v3 : thème clair, beige premium ===== */
+html{color-scheme:only light;background:#ebe1cc}
+:root[data-theme="light"]{color-scheme:only light;--bg:#f4ecdc;--fg:#2b2619;--muted:#5f5846;--line:#ddd0b6;--alt:#ede3cd;--canvas:#ebe1cc;--surface:#faf6ec;--surface2:#f2e9d6;--card:#fffdf7;--walnut:#7a6f55;--forest:#e4d5b4;--deep:#3b3023;--sandd:#d9c59b}
+body{background:var(--canvas);color:var(--fg)}
+/* en-tête */
+.hero{background:linear-gradient(160deg,#f1e6cd 0%,#e4d1a8 100%);color:var(--deep)}
+.leaf{color:#c8ad7a;opacity:.45}
+.hero .meta{color:#8a7648}
+.hero-foot{border-top-color:rgba(59,48,35,.18)}
+.hero-foot p{color:#5a4f39}
+.word .pre{color:#a8742f}
+/* boutons & filtres */
+.chip.on{background:var(--deep);border-color:var(--deep);color:#f6efe0}
+.btn.tg:hover{color:#f6efe0}
+.btn.tg::before{background:var(--deep)}
+/* bandeau engagements */
+.trust div,.trust div:first-child{background:var(--surface);color:var(--deep);border:1px solid var(--line)}
+.trust small{color:var(--walnut)}
+/* conseils */
+#conseils{background:#eadcbd;color:var(--deep)}
+#conseils .cap{color:var(--walnut)}
+#conseils .intro{color:var(--muted)}
+#conseils .step{background:var(--card);border-color:var(--line)}
+#conseils .step p{color:var(--muted)}
+#conseils .safety{border-color:var(--line);border-left-color:var(--saffron);color:var(--muted);background:var(--card)}
+.oil{background:var(--card);border:1px solid var(--line)}
+.oil:nth-child(2){background:#e8dbb9}
+/* coffrets */
+.duo>div+div{background:#e8d9b8;border-color:var(--sandd);color:var(--deep)}
+.duo>div+div .cap{color:var(--walnut)!important}
+/* à propos */
+.why article.dk{background:#e8d9b8;border-color:var(--sandd);color:var(--deep)}
+.why .dk p{color:var(--muted)}
+.portrait figcaption{background:rgba(250,246,236,.94);color:var(--deep)}
+/* contact & pied de page */
+.contact{background:linear-gradient(160deg,#ecdcba,#dec99f);color:var(--deep)}
+.contact .cap{color:var(--walnut)}
+.contact input{border-color:#bda877}
+.contact input::placeholder{color:#8a7d60}
+.contact p{color:var(--muted)}
+footer{background:#e4d8bf;color:var(--walnut);border:1px solid var(--line)}
 </style>
 </head>
 <body>
@@ -677,7 +732,7 @@ Eucalyptus globuleux|1|r
 Eucalyptus radié|1|r|Eucalyptus radiata
 Fagarier à bouche ouverte||t
 Famonty||p
-Fenouil doux|1|d`.split('\n').map(function(l){var a=l.split('|');return{g:'he',n:a[0],b:a[1],c:a[2],l:a[3]||'',tag:a[4]||'',p:HEP}});
+Fenouil doux|1|d`.split('\n').map(function(l){var a=l.split('|');return{g:'he',n:a[0],b:a[1],c:a[2],l:a[3]||'',tag:a[4]||'',p:HEP,v:'10 ml',img:''}});
 var NW=`hp|Huile Précieuse à l’Amarante|29||Soin visage et buste
 hp|Huile Précieuse au Camélia|39||Soin visage et buste
 hp|Huile Précieuse au Chèvrefeuille|29||Soin visage et buste||1
@@ -722,12 +777,12 @@ par|L’Air|75||Eau de parfum naturelle
 par|L’Eau|75||Eau de parfum naturelle
 par|La Terre|75||Eau de parfum naturelle
 par|Le Bois|75||Eau de parfum naturelle
-par|Le Feu|75||Eau de parfum naturelle`.split('\n').map(function(l){var a=l.split('|');return{g:a[0],n:a[1],p:parseFloat(a[2]),r:a[3]?parseFloat(a[3]):0,l:a[4],tag:a[5]||'',o:a[6]==='1',b:/ BIO$/.test(a[1])}});
+par|Le Feu|75||Eau de parfum naturelle`.split('\n').map(function(l){var a=l.split('|');return{g:a[0],n:a[1],p:parseFloat(a[2]),r:a[3]?parseFloat(a[3]):0,l:a[4],tag:a[5]||'',o:a[6]==='1',b:/ BIO$/.test(a[1]),v:'',img:''}});
 var ALL=HE.concat(NW),NB=ALL.length;
 function norm(o){o.o=!!(o.mo||(o.s!=null&&o.s<=0))}
 ALL.forEach(function(o){o.mo=!!o.o});
-try{JSON.parse(localStorage.getItem('fl_cust')||'[]').forEach(function(c){ALL.push({g:c.g,n:c.n,p:c.p,r:0,l:c.l||'',tag:c.tag||'',o:false,mo:false,b:false,c:'p',cust:1,d:c.d||'',del:c.del})})}catch(e){}
-try{var OVv=JSON.parse(localStorage.getItem('fl_prod')||'{}');ALL.forEach(function(o,i){var v=OVv[i];if(v){if(v.p!=null)o.p=v.p;if(v.r!=null)o.r=v.r;if('s' in v)o.s=v.s;if('mo' in v)o.mo=v.mo;if(v.h)o.h=1;if(v.t!=null)o.tag=v.t}})}catch(e){}
+try{JSON.parse(localStorage.getItem('fl_cust')||'[]').forEach(function(c){ALL.push({g:c.g,n:c.n,p:c.p,r:0,l:c.l||'',tag:c.tag||'',o:false,mo:false,b:false,c:'p',cust:1,d:c.d||'',del:c.del,v:c.v||'',img:''})})}catch(e){}
+try{var OVv=JSON.parse(localStorage.getItem('fl_prod')||'{}');ALL.forEach(function(o,i){var v=OVv[i];if(v){if(v.p!=null)o.p=v.p;if(v.r!=null)o.r=v.r;if('s' in v)o.s=v.s;if('mo' in v)o.mo=v.mo;if(v.h)o.h=1;if(v.t!=null)o.tag=v.t;if('v' in v)o.v=v.v;if('i' in v)o.img=v.i}})}catch(e){}
 ALL.forEach(function(o){if(o.del)o.h=1;norm(o)});
 var cart={},step='cart',promo=false,G='all',F='all',tm,last='';
 function $(i){return document.getElementById(i)}
@@ -812,7 +867,7 @@ function lk(o,op){if(o.cust)return op?'<a href="#/produit/'+ALL.indexOf(o)+'">':
 $('gam').innerHTML='<button class="chip on" data-g="all">Tout</button>'+Object.keys(G0).map(function(k){return '<button class="chip" data-g="'+k+'">'+G0[k][0]+'</button>'}).join('');
 function renderGrid(){$('grid').innerHTML=ALL.map(function(o,i){
  var k=o.g==='he'?C[o.c]:[ '',G0[o.g][1] ],sym=o.g==='dif'?'diff':'bottle';
- if(o.h)return '';return '<article class="p" data-g="'+o.g+'" data-t="'+k[0]+'" data-n="'+esc(o.n.toLowerCase())+'"><div class="vis" style="--c:'+k[1]+'">'+(o.tag?'<span class="tag">'+o.tag+'</span>':'')+'<svg><use href="#'+sym+'"/></svg></div><div><h3>'+lk(o,1)+esc(o.n.replace(/ BIO$/,''))+lk(o,0)+(o.b?'<span class="bio">BIO</span>':'')+'</h3>'+(o.l?'<em>'+o.l+'</em>':'')+(o.d?'<p class="dsc">'+esc(o.d)+'</p>':'')+'</div><div class="buy"><span class="price">'+eur(o.p)+(o.r?'<span class="ref">'+eur(o.r)+'</span>':'')+(o.g==='he'?' <small>/ 10 ml</small>':'')+'</span><button class="btn sm" '+(o.o?'disabled>Réappro.':'data-i="'+i+'">Ajouter')+'</button></div></article>'}).join('')}renderGrid();
+ if(o.h)return '';return '<article class="p" data-g="'+o.g+'" data-t="'+k[0]+'" data-n="'+esc(o.n.toLowerCase())+'"><div class="vis" style="--c:'+k[1]+'">'+(o.tag?'<span class="tag">'+o.tag+'</span>':'')+(o.img?'<img src="'+o.img+'" alt="" loading="lazy">':'<svg><use href="#'+sym+'"/></svg>')+'</div><div><h3>'+lk(o,1)+esc(o.n.replace(/ BIO$/,''))+lk(o,0)+(o.b?'<span class="bio">BIO</span>':'')+'</h3>'+(o.l?'<em>'+o.l+'</em>':'')+(o.d?'<p class="dsc">'+esc(o.d)+'</p>':'')+'</div><div class="buy"><span class="price">'+eur(o.p)+(o.r?'<span class="ref">'+eur(o.r)+'</span>':'')+(o.v?' <small>/ '+esc(o.v)+'</small>':'')+'</span><button class="btn sm" '+(o.o?'disabled>Réappro.':'data-i="'+i+'">Ajouter')+'</button></div></article>'}).join('')}renderGrid();
 function apply(){var q=$('q').value.trim().toLowerCase(),v=0;
  $('need').children[0].parentNode.querySelectorAll('.chip').forEach(function(c){c.style.display=(G==='all'||G==='he')?'':'none'});
  document.querySelectorAll('.p').forEach(function(p){var ok=(G==='all'||p.dataset.g===G)&&(F==='all'||p.dataset.t===F)&&p.dataset.n.indexOf(q)>-1;p.classList.toggle('hide',!ok);if(ok)v++});
@@ -860,7 +915,7 @@ function detail(k){var d=DT[k],i=ALL.findIndex(function(o){return o.g==='he'&&o.
  var o=ALL[i],ct=C[o.c],bio=ALL.some(function(x){return x.g==='he'&&x.n===k&&x.b}),seen={},rel=ALL.filter(function(x){if(x.g!=='he'||x.c!==o.c||x.n===k||seen[x.n]||!DT[x.n])return false;seen[x.n]=1;return true}).slice(0,6);
  document.title=k+' — Pierre Franchomme';
  $('detail').innerHTML='<div class="dtop"><a href="#boutique" data-back>← Retour à la boutique</a><span class="tb"><a class="cart" href="#" data-acc>Connexion</a><a class="cart" href="#" id="open2">Panier <b id="count2">'+tot().c+'</b></a></span></div>'+
- '<div class="dgrid"><div class="dvis" style="--c:'+ct[1]+'"><svg><use href="#bottle"/></svg></div><div class="dtxt"><p class="cap">Huile essentielle · '+ct[0]+'</p><h1 class="h">'+esc(k)+'</h1><p class="lat">'+esc(d.l)+(bio?' · <span class="bio" style="background:var(--moss);color:#f0e8d2;border-radius:3px;padding:3px 6px;font:700 10px var(--sans);font-style:normal">BIO</span>':'')+'</p><p class="lead">'+esc(d.d)+'</p><h4>Utilisation</h4><ul>'+li(d.u)+'</ul><h4>Bienfaits</h4><ul>'+li(d.b)+'</ul><p class="safety">'+(d.c?esc(d.c)+' ':'')+'Toujours diluer avant usage cutané. Demandez conseil à un professionnel de santé en cas de grossesse, d’allaitement, de maladie chronique, ou pour un enfant. Tenir hors de portée des enfants. Ne pas avaler.</p><div class="dbuy"><span class="price">'+eur(o.p)+' <small>/ 10 ml</small></span><button class="btn fill" data-i="'+i+'">Ajouter au panier</button></div></div></div>'+
+ '<div class="dgrid"><div class="dvis" style="--c:'+ct[1]+'">'+(o.img?'<img src="'+o.img+'" alt="">':'<svg><use href="#bottle"/></svg>')+'</div><div class="dtxt"><p class="cap">Huile essentielle · '+ct[0]+'</p><h1 class="h">'+esc(k)+'</h1><p class="lat">'+esc(d.l)+(bio?' · <span class="bio" style="background:var(--moss);color:#f0e8d2;border-radius:3px;padding:3px 6px;font:700 10px var(--sans);font-style:normal">BIO</span>':'')+'</p><p class="lead">'+esc(d.d)+'</p><h4>Utilisation</h4><ul>'+li(d.u)+'</ul><h4>Bienfaits</h4><ul>'+li(d.b)+'</ul><p class="safety">'+(d.c?esc(d.c)+' ':'')+'Toujours diluer avant usage cutané. Demandez conseil à un professionnel de santé en cas de grossesse, d’allaitement, de maladie chronique, ou pour un enfant. Tenir hors de portée des enfants. Ne pas avaler.</p><div class="dbuy"><span class="price">'+eur(o.p)+(o.v?' <small>/ '+esc(o.v)+'</small>':'')+'</span><button class="btn fill" data-i="'+i+'">Ajouter au panier</button></div></div></div>'+
  '<div class="rel"><p class="cap">Dans la même famille</p><ul>'+rel.map(function(x){return '<li><a href="#/huile/'+encodeURIComponent(x.n)+'">'+esc(x.n)+'</a></li>'}).join('')+'</ul></div>'}
 window.addEventListener('hashchange',function(){route()});window.addEventListener('popstate',function(){route()});
 document.addEventListener('click',function(e){if(e.target.closest('#open2')){e.preventDefault();open(true)}
@@ -904,7 +959,7 @@ function go(h){try{if(location.hash!==h)history.pushState(null,'',h)}catch(e){}r
 function route(h){h=h||location.hash;if(h===curH)return;curH=h;view(h)}
 function detailC(i){var o=ALL[i];if(!o||!o.cust||o.del||o.h){go('#boutique');return false}
  document.title=o.n+' — Pierre Franchomme';
- $('detail').innerHTML='<div class="dtop"><a href="#boutique" data-back>← Retour à la boutique</a><span class="tb"><a class="cart" href="#" data-acc>Connexion</a><a class="cart" href="#" id="open2">Panier <b id="count2">'+tot().c+'</b></a></span></div><div class="dgrid"><div class="dvis" style="--c:'+G0[o.g][1]+'"><svg><use href="#'+(o.g==='dif'?'diff':'bottle')+'"/></svg></div><div class="dtxt"><p class="cap">'+G0[o.g][0]+'</p><h1 class="h">'+esc(o.n)+'</h1>'+(o.l?'<p class="lat">'+esc(o.l)+'</p>':'')+(o.d?'<p class="lead">'+esc(o.d).replace(/\n/g,'<br>')+'</p>':'')+'<div class="dbuy"><span class="price">'+eur(o.p)+(o.r?' <s class="u">'+eur(o.r)+'</s>':'')+'</span><button class="btn fill" data-i="'+i+'"'+(o.o?' disabled>Réappro.':'>Ajouter au panier')+'</button></div></div></div>'}
+ $('detail').innerHTML='<div class="dtop"><a href="#boutique" data-back>← Retour à la boutique</a><span class="tb"><a class="cart" href="#" data-acc>Connexion</a><a class="cart" href="#" id="open2">Panier <b id="count2">'+tot().c+'</b></a></span></div><div class="dgrid"><div class="dvis" style="--c:'+G0[o.g][1]+'">'+(o.img?'<img src="'+o.img+'" alt="">':'<svg><use href="#'+(o.g==='dif'?'diff':'bottle')+'"/></svg>')+'</div><div class="dtxt"><p class="cap">'+G0[o.g][0]+'</p><h1 class="h">'+esc(o.n)+'</h1>'+(o.l?'<p class="lat">'+esc(o.l)+'</p>':'')+(o.d?'<p class="lead">'+esc(o.d).replace(/\n/g,'<br>')+'</p>':'')+'<div class="dbuy"><span class="price">'+eur(o.p)+(o.r?' <s class="u">'+eur(o.r)+'</s>':'')+(o.v?' <small>/ '+esc(o.v)+'</small>':'')+'</span><button class="btn fill" data-i="'+i+'"'+(o.o?' disabled>Réappro.':'>Ajouter au panier')+'</button></div></div></div>'}
 function view(h){viewX(h);refAcc()}
 function viewX(h){var m2=h.match(/^#\/produit\/(\d+)$/),m=h.match(/^#\/huile\/(.+)$/),a=h.match(/^#\/(compte|admin)$/),b=document.body;
  if(m){if(detail(decodeURIComponent(m[1]))===false)return;b.classList.add('det');window.scrollTo(0,0)}
@@ -951,8 +1006,12 @@ function oc(o,a){var op=Object.keys(ST).map(function(k){return'<option value="'+
 function head(cap,t,u){return'<div><p class="cap">'+cap+'</p><h1 class="h">'+esc(t)+'</h1><p class="u" style="margin-top:12px">'+esc(u.email)+' · '+({admin:'Administrateur',staff:'Équipe',client:'Client'}[u.role])+' <button class="rm" data-out type="button">Se déconnecter</button></p></div>'}
 function tbs(k,t){return'<div class="tabs">'+t.map(function(x){return'<button class="chip'+(tab[k]===x[0]?' on':'')+'" data-tab="'+k+':'+x[0]+'" type="button">'+x[1]+'</button>'}).join('')+'</div>'}
 function ordList(){var q=oqv.toLowerCase(),L=orders().filter(function(o){return(ofl==='all'||o.st===ofl)&&(o.num+o.name+o.email).toLowerCase().indexOf(q)>-1});return L.length?L.map(function(o){return oc(o,1)}).join(''):'<p class="empty">Aucune commande.</p>'}
-function prdRows(q,g){q=(q||'').toLowerCase();var n=function(v){return v==null?'':v};return ALL.map(function(o,i){return[o,i]}).filter(function(x){var o=x[0];return!o.del&&(!g||o.g===g)&&o.n.toLowerCase().indexOf(q)>-1}).map(function(x){var o=x[0],i=x[1],st=o.h?'hide':(o.mo?'out':'on');return'<tr><td>'+G0[o.g][0]+'</td><td>'+esc(o.n)+'</td><td><input type="number" step="0.1" min="0" value="'+o.p+'" data-pp="'+i+'"> €</td><td><input type="number" step="0.1" min="0" value="'+(o.r||'')+'" data-pr="'+i+'" placeholder="—"></td><td><input type="number" step="1" min="0" value="'+n(o.s)+'" data-ps="'+i+'" placeholder="illimité"></td><td><select data-pt="'+i+'"><option value="on"'+(st==='on'?' selected':'')+'>En vente</option><option value="out"'+(st==='out'?' selected':'')+'>Réappro.</option><option value="hide"'+(st==='hide'?' selected':'')+'>Masqué</option></select></td><td>'+(o.cust?'<button class="rm" data-pdel="'+i+'" type="button">Supprimer</button>':'')+'</td></tr>'}).join('')||'<tr><td colspan="7">Aucun produit.</td></tr>'}
-function setProd(i,f,q){var O=LS.g('fl_prod',{}),o=ALL[i],v=O[i]=O[i]||{};f(v);LS.s('fl_prod',O);if(v.p!=null)o.p=v.p;if(v.r!=null)o.r=v.r;if('s' in v)o.s=v.s;if('mo' in v)o.mo=v.mo;o.h=(v.h||o.del)?1:0;norm(o);dirty=1;if(!q)toast('Produit enregistré')}
+function prdRows(q,g){q=(q||'').toLowerCase();var n=function(v){return v==null?'':v};return ALL.map(function(o,i){return[o,i]}).filter(function(x){var o=x[0];return!o.del&&(!g||o.g===g)&&o.n.toLowerCase().indexOf(q)>-1}).map(function(x){var o=x[0],i=x[1],st=o.h?'hide':(o.mo?'out':'on');return'<tr><td>'+G0[o.g][0]+'</td><td>'+phCell(o,i)+'</td><td>'+esc(o.n)+'</td><td><input type="text" value="'+esc(o.v||'')+'" data-pv="'+i+'" placeholder="ex. 10 ml"></td><td><input type="number" step="0.1" min="0" value="'+o.p+'" data-pp="'+i+'"> €</td><td><input type="number" step="0.1" min="0" value="'+(o.r||'')+'" data-pr="'+i+'" placeholder="—"></td><td><input type="number" step="1" min="0" value="'+n(o.s)+'" data-ps="'+i+'" placeholder="illimité"></td><td><select data-pt="'+i+'"><option value="on"'+(st==='on'?' selected':'')+'>En vente</option><option value="out"'+(st==='out'?' selected':'')+'>Réappro.</option><option value="hide"'+(st==='hide'?' selected':'')+'>Masqué</option></select></td><td>'+(o.cust?'<button class="rm" data-pdel="'+i+'" type="button">Supprimer</button>':'')+'</td></tr>'}).join('')||'<tr><td colspan="9">Aucun produit.</td></tr>'}
+function setProd(i,f,q){var O=LS.g('fl_prod',{}),o=ALL[i],v=O[i]=O[i]||{};f(v);LS.s('fl_prod',O);if(v.p!=null)o.p=v.p;if(v.r!=null)o.r=v.r;if('s' in v)o.s=v.s;if('mo' in v)o.mo=v.mo;if('v' in v)o.v=v.v;if('i' in v)o.img=v.i;o.h=(v.h||o.del)?1:0;norm(o);dirty=1;if(!q)toast('Produit enregistré')}
+var newImg='';
+function imgRead(f,cb){if(!f)return;if(!/^image\//.test(f.type)){toast('Choisissez un fichier image');return}var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var M=800,s=Math.min(1,M/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*s));c.height=Math.max(1,Math.round(im.height*s));var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.82))};im.onerror=function(){toast('Image illisible')};im.src=r.result};r.readAsDataURL(f)}
+function phCell(o,i){return(o.img?'<img class="th" src="'+o.img+'" alt="">':'<span class="th"></span>')+'<label class="btn sm">'+(o.img?'Changer':'Ajouter')+'<input type="file" accept="image/*" data-pi="'+i+'" hidden></label>'+(o.img?'<button class="rm" data-pir="'+i+'" type="button">Retirer</button>':'')}
+function nprev(){var p=$('npv'),x=$('nimgx');if(!p)return;p.innerHTML=newImg?'<img src="'+newImg+'" alt="">':'Aucune photo';if(x)x.hidden=!newImg}
 function hasDemo(){return users().some(function(u){return u.demo})}
 function loadDemo(){var N=[['Camille','Martin'],['Lucas','Bernard'],['Inès','Moreau'],['Hugo','Petit']];
  Promise.all(N.map(function(n,i){return mk('demo'+(i+1)+'@exemple.fr',n[0],n[1],'demo1234','client')})).then(function(){
@@ -967,7 +1026,7 @@ function dash(){var O=orders(),live=O.filter(function(o){return o.st!=='ann'}),s
  return'<div class="tabs"><button class="btn sm" data-demo type="button">'+(hasDemo()?'Supprimer les données de démonstration':'Charger des données de démonstration')+'</button></div><div class="kp">'+[['À traiter',P.length],['À expédier',R.length],['CA total',eur(sum(live))],['CA 30 jours',eur(sum(m))],['Commandes',O.length],['Clients',cl]].map(function(k){return'<div>'+k[0]+'<b>'+k[1]+'</b></div>'}).join('')+'</div><h2 class="sh2">Commandes à traiter</h2>'+(P.length?P.slice(0,5).map(function(o){return oc(o,1)}).join(''):'<p class="empty">Aucune commande en attente.</p>')+'<h2 class="sh2">Stock à surveiller</h2>'+(low.length?'<ul class="inf">'+low.map(function(o){return'<li>'+esc(o.n)+' : '+(o.s<=0?'épuisé':o.s+' restant(s)')+'</li>'}).join('')+'</ul>':'<p class="empty">Aucun stock bas (seuil : 5 unités, pour les produits dont le stock est suivi).</p>')+'<h2 class="sh2">Meilleures ventes</h2>'+(top.length?'<ul class="inf">'+top.map(function(n){return'<li>'+esc(n)+' : '+bs[n]+' vendu(s)</li>'}).join('')+'</ul>':'<p class="empty">Pas encore de ventes.</p>')+'<h2 class="sh2">Informations du site</h2><ul class="inf"><li>Produits en ligne : '+ALL.filter(function(o){return!o.h}).length+' sur '+ALL.filter(function(o){return!o.del}).length+'</li><li>Livraison : '+eur(SHIP)+', offerte dès '+eur(FREE)+'</li><li>Codes promo actifs : '+(SET.codes.filter(function(c){return c.on}).map(function(c){return c.code+' (−'+c.pct+' %)'}).join(', ')||'aucun')+'</li><li>Prix indicatif des huiles essentielles : '+eur(HEP)+' / 10 ml</li></ul>'}
 function cmdT(){return'<div class="tabs">'+[['all','Toutes']].concat(Object.keys(ST).map(function(k){return[k,ST[k][0]]})).map(function(x){return'<button class="chip'+(ofl===x[0]?' on':'')+'" data-of="'+x[0]+'" type="button">'+x[1]+'</button>'}).join('')+'<input class="search q2" id="oq" type="search" placeholder="N°, nom ou e-mail…" value="'+esc(oqv)+'"><button class="btn sm" data-csv type="button">Exporter en CSV</button></div><div id="ol" style="display:grid;gap:12px">'+ordList()+'</div>'}
 function cliT(){var O=orders(),L=users().filter(function(u){return u.role==='client'});return L.length?'<div class="tw"><table><tr><th>Client</th><th>E-mail</th><th>Téléphone</th><th>Inscrit le</th><th>Commandes</th><th>Dépensé</th></tr>'+L.map(function(u){var m=O.filter(function(o){return o.uid===u.id||o.email===u.email});return'<tr><td>'+esc(u.fn+' '+u.ln)+'</td><td>'+esc(u.email)+'</td><td>'+esc(u.tel||'—')+'</td><td>'+fmtD(u.d)+'</td><td>'+m.length+'</td><td>'+eur(m.filter(function(o){return o.st!=='ann'}).reduce(function(s,o){return s+o.total},0))+'</td></tr>'}).join('')+'</table></div>':'<p class="empty">Aucun compte client pour le moment.</p>'}
-function prdT(){return'<div class="tabs"><input class="search q2" id="pq" type="search" placeholder="Rechercher un produit…"><select id="pg" class="q2"><option value="">Toutes les gammes</option>'+Object.keys(G0).map(function(g){return'<option value="'+g+'">'+G0[g][0]+'</option>'}).join('')+'</select></div><p class="u">Chaque modification s’enregistre en quittant le champ et s’applique tout de suite à la boutique. Stock vide = illimité ; à 0, le produit passe en « Réappro. ». Le stock diminue à chaque commande.</p><div class="tw"><table><tr><th>Gamme</th><th>Produit</th><th>Prix</th><th>Prix barré</th><th>Stock</th><th>Statut</th><th></th></tr><tbody id="pl">'+prdRows('','')+'</tbody></table></div><h2 class="sh2">Ajouter un produit</h2><form id="fpa" class="fld" novalidate><input name="n" placeholder="Nom du produit"><div class="two"><select name="g">'+Object.keys(G0).map(function(g){return'<option value="'+g+'">'+G0[g][0]+'</option>'}).join('')+'</select><input name="p" type="number" step="0.1" min="0" placeholder="Prix (€)"></div><div class="two"><input name="s" type="number" min="0" placeholder="Stock (vide = illimité)"><input name="tag" placeholder="Badge (ex. Nouveau)"></div><input name="l" placeholder="Sous-titre (ex. Huile végétale)"><textarea name="d" rows="5" placeholder="Description du produit (affichée sur la fiche et sous le nom dans la boutique)"></textarea><button class="btn fill" type="submit">Ajouter à la boutique</button></form>'}
+function prdT(){newImg='';return'<div class="tabs"><input class="search q2" id="pq" type="search" placeholder="Rechercher un produit…"><select id="pg" class="q2"><option value="">Toutes les gammes</option>'+Object.keys(G0).map(function(g){return'<option value="'+g+'">'+G0[g][0]+'</option>'}).join('')+'</select></div><p class="u">Chaque modification s’enregistre en quittant le champ et s’applique tout de suite à la boutique. Stock vide = illimité ; à 0, le produit passe en « Réappro. ». Le stock diminue à chaque commande.</p><div class="tw"><table><tr><th>Gamme</th><th>Photo</th><th>Produit</th><th>Contenance</th><th>Prix</th><th>Prix barré</th><th>Stock</th><th>Statut</th><th></th></tr><tbody id="pl">'+prdRows('','')+'</tbody></table></div><h2 class="sh2">Ajouter un produit</h2><form id="fpa" class="fld" novalidate><input name="n" placeholder="Nom du produit"><div class="two"><select name="g">'+Object.keys(G0).map(function(g){return'<option value="'+g+'">'+G0[g][0]+'</option>'}).join('')+'</select><input name="p" type="number" step="0.1" min="0" placeholder="Prix (€)"></div><div class="two"><input name="v" placeholder="Contenance (ex. 10 ml, 50 ml)"><input name="s" type="number" min="0" placeholder="Stock (vide = illimité)"></div><input name="tag" placeholder="Badge (ex. Nouveau)"><input name="l" placeholder="Sous-titre (ex. Huile végétale)"><textarea name="d" rows="5" placeholder="Description du produit (affichée sur la fiche et sous le nom dans la boutique)"></textarea><div class="ph"><div class="pv" id="npv">Aucune photo</div><label class="btn sm">Choisir une photo<input type="file" accept="image/*" id="nimg" hidden></label><button class="rm" type="button" id="nimgx" hidden>Retirer</button></div><button class="btn fill" type="submit">Ajouter à la boutique</button></form>'}
 function setT(){return'<form id="fset" class="fld" novalidate><label class="u">Frais de livraison (€)</label><input name="ship" type="number" step="0.1" min="0" value="'+SET.ship+'"><label class="u">Livraison offerte dès (€)</label><input name="free" type="number" step="1" min="0" value="'+SET.free+'"><label class="u">Prix indicatif des huiles essentielles (€ / 10 ml, hors prix modifiés produit par produit)</label><input name="hep" type="number" step="0.1" min="0" value="'+SET.hep+'"><button class="btn fill" type="submit">Enregistrer</button></form><h2 class="sh2">Codes promo</h2><div class="tw"><table><tr><th>Code</th><th>Remise</th><th>Actif</th><th>Cumulable</th><th></th></tr>'+SET.codes.map(function(c,i){return'<tr><td>'+esc(c.code)+'</td><td>−'+c.pct+' %</td><td><input type="checkbox" data-cs="'+i+'"'+(c.on?' checked':'')+' style="width:auto"></td><td><input type="checkbox" data-cc="'+i+'"'+(c.cum?' checked':'')+' style="width:auto"></td><td><button class="rm" data-cdel="'+i+'" type="button">Supprimer</button></td></tr>'}).join('')+'</table></div><form id="fcode" class="fld" novalidate><div class="two"><input name="code" placeholder="Code (ex. ETE15)"><input name="pct" type="number" min="1" max="90" placeholder="Remise en %"></div><label class="u" style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="cum" style="width:auto"> Cumulable avec d’autres codes (les remises s’additionnent)</label><button class="btn" type="submit">Ajouter le code</button></form>'}
 function eqT(u){return'<div class="tw"><table><tr><th>Nom</th><th>E-mail</th><th>Rôle</th><th></th></tr>'+users().filter(isS).map(function(x){return'<tr><td>'+esc(x.fn+' '+x.ln)+'</td><td>'+esc(x.email)+'</td><td>'+(x.role==='admin'?'Administrateur':'Équipe')+'</td><td>'+(x.id===u.id?'':'<button class="rm" data-del="'+x.id+'" type="button">Supprimer</button>')+'</td></tr>'}).join('')+'</table></div><h2 class="sh2">Ajouter un membre</h2><form id="ft" class="fld"><div class="two"><input name="fn" placeholder="Prénom" required><input name="ln" placeholder="Nom" required></div><input type="email" name="email" placeholder="E-mail" required><input type="password" name="pw" placeholder="Mot de passe (8 caractères min.)" required minlength="8"><select name="rl"><option value="staff">Équipe (gestion des commandes)</option><option value="admin">Administrateur (gère aussi l’équipe)</option></select><button class="btn fill" type="submit">Créer le compte</button></form>'}
 function adm(u){var P=orders().filter(function(o){return o.st==='att'}).length,t=[['dash','Tableau de bord'],['cmd','Commandes'+(P?' ('+P+')':'')],['prd','Produits & stock'],['cli','Clients']];if(u.role==='admin')t.push(['set','Livraison & promos'],['eq','Équipe']);if((tab.admin==='eq'||tab.admin==='set')&&u.role!=='admin')tab.admin='dash';
@@ -1000,15 +1059,20 @@ document.addEventListener('click',function(e){var t=e.target,x;
  if(x=t.closest('[data-csv]')){csvOrders();return}
  if(x=t.closest('[data-cdel]')){var u2=me();if(!u2||u2.role!=='admin')return;SET.codes.splice(+x.dataset.cdel,1);saveSet();redraw();return}
  if(x=t.closest('[data-pdel]')){if(!isS(me())||!confirm('Supprimer ce produit de la boutique ?'))return;var ix=+x.dataset.pdel,CL=LS.g('fl_cust',[]);if(CL[ix-NB])CL[ix-NB].del=1;LS.s('fl_cust',CL);ALL[ix].del=1;ALL[ix].h=1;dirty=1;toast('Produit supprimé');redraw();return}
- if(t.closest('[data-demo]')){if(!isS(me()))return;if(hasDemo())clearDemo();else loadDemo();return}
+ if(x=t.closest('[data-pir]')){if(!isS(me()))return;setProd(+x.dataset.pir,function(v){v.i=''},1);$('pl').innerHTML=prdRows($('pq').value,$('pg').value);toast('Photo retirée');return}
+if(t.closest('#nimgx')){newImg='';var fi=$('nimg');if(fi)fi.value='';nprev();return}
+if(t.closest('[data-demo]')){if(!isS(me()))return;if(hasDemo())clearDemo();else loadDemo();return}
  if(x=t.closest('[data-of]')){ofl=x.dataset.of;redraw();return}
  if(x=t.closest('[data-del]')){var u=me(),L=users(),v=L.filter(function(a){return a.id===x.dataset.del})[0];if(!u||u.role!=='admin'||!v||v.id===u.id)return;if(v.role==='admin'&&L.filter(function(a){return a.role==='admin'}).length<2){toast('Il doit rester un administrateur');return}if(confirm('Supprimer le compte '+v.email+' ?')){LS.s('fl_users',L.filter(function(a){return a.id!==v.id}));redraw()}}});
 $('ov').addEventListener('click',closeA);
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeA()});
 document.addEventListener('input',function(e){var i=e.target.id;if(i==='oq'){oqv=e.target.value;$('ol').innerHTML=ordList()}if(i==='pq')$('pl').innerHTML=prdRows(e.target.value,$('pg').value)});
 document.addEventListener('change',function(e){var t=e.target,d=t.dataset;if(t.id==='pg'){$('pl').innerHTML=prdRows($('pq').value,t.value);return}
+  if(t.id==='nimg'){if(!isS(me()))return;imgRead(t.files[0],function(u){newImg=u;nprev()});return}
+  if(d.pi!==undefined){if(!isS(me()))return;var pi=+d.pi;imgRead(t.files[0],function(u){setProd(pi,function(x){x.i=u},1);$('pl').innerHTML=prdRows($('pq').value,$('pg').value);toast(MEM.hasOwnProperty('fl_prod')?'Photo non conservée : mémoire du navigateur pleine':'Photo enregistrée')});return}
  if(!isS(me()))return;var v=parseFloat(String(t.value).replace(',','.'));
- if(d.pp!==undefined){if(isNaN(v)||v<0){toast('Prix invalide');return}setProd(d.pp,function(x){x.p=v});return}
+ if(d.pv!==undefined){setProd(d.pv,function(x){x.v=t.value.trim()});return}
+if(d.pp!==undefined){if(isNaN(v)||v<0){toast('Prix invalide');return}setProd(d.pp,function(x){x.p=v});return}
  if(d.pr!==undefined){setProd(d.pr,function(x){x.r=(isNaN(v)||v<=0)?0:v});return}
  if(d.ps!==undefined){setProd(d.ps,function(x){x.s=(t.value.trim()===''||isNaN(v))?null:Math.max(0,Math.floor(v))});return}
  if(d.pt!==undefined){setProd(d.pt,function(x){x.h=t.value==='hide';x.mo=t.value==='out'});return}
@@ -1030,7 +1094,7 @@ function onSub(e){var f=e.target,i=f.id,E=f.elements,er=function(m){var a=$('ae'
   if(pw){var s=salt();H(s+pw).then(function(h){set(h,s)})}else set()}
  else if(i==='fset'){e.preventDefault();var a1=me();if(!a1||a1.role!=='admin')return;var s1=parseFloat(E.ship.value),s2=parseFloat(E.free.value),s3=parseFloat(E.hep.value);if([s1,s2,s3].some(function(x){return isNaN(x)||x<0})){toast('Valeurs invalides');return}SET.ship=s1;SET.free=s2;SET.hep=s3;saveSet();toast('Réglages enregistrés');redraw()}
  else if(i==='fcode'){e.preventDefault();var a2=me();if(!a2||a2.role!=='admin')return;var cd=E.code.value.trim().toUpperCase().replace(/\s+/g,''),pc=parseInt(E.pct.value,10);if(!cd||isNaN(pc)||pc<1||pc>90){toast('Code ou remise invalide (1 à 90 %)');return}if(SET.codes.some(function(x){return x.code===cd})){toast('Ce code existe déjà');return}SET.codes.push({code:cd,pct:pc,on:1,cum:E.cum.checked?1:0});saveSet();toast('Code ajouté');redraw()}
- else if(i==='fpa'){e.preventDefault();if(!isS(me()))return;var n=E.n.value.trim(),pp=parseFloat(E.p.value),ss=E.s.value.trim();if(!n||isNaN(pp)||pp<0){toast('Un nom et un prix valides sont requis');return}var c={g:E.g.value,n:n,p:pp,l:E.l.value.trim(),tag:E.tag.value.trim(),d:E.d.value.trim()},CL=LS.g('fl_cust',[]);CL.push(c);LS.s('fl_cust',CL);ALL.push({g:c.g,n:c.n,p:c.p,r:0,l:c.l,tag:c.tag,d:c.d,o:false,mo:false,b:false,c:'p',cust:1});var ix=ALL.length-1;if(ss!=='')setProd(ix,function(x){x.s=Math.max(0,parseInt(ss,10)||0)},1);dirty=1;toast('Produit ajouté à la boutique');redraw()}
+ else if(i==='fpa'){e.preventDefault();if(!isS(me()))return;var n=E.n.value.trim(),pp=parseFloat(E.p.value),ss=E.s.value.trim();if(!n||isNaN(pp)||pp<0){toast('Un nom et un prix valides sont requis');return}var c={g:E.g.value,n:n,p:pp,l:E.l.value.trim(),tag:E.tag.value.trim(),d:E.d.value.trim(),v:E.v.value.trim()},CL=LS.g('fl_cust',[]);CL.push(c);LS.s('fl_cust',CL);ALL.push({g:c.g,n:c.n,p:c.p,r:0,l:c.l,tag:c.tag,d:c.d,o:false,mo:false,b:false,c:'p',cust:1,v:c.v,img:''});var ix=ALL.length-1,im=newImg;if(ss!==''||im)setProd(ix,function(x){if(ss!=='')x.s=Math.max(0,parseInt(ss,10)||0);if(im)x.i=im},1);newImg='';dirty=1;toast(im&&MEM.hasOwnProperty('fl_prod')?'Produit ajouté, mais photo non conservée (mémoire du navigateur pleine)':'Produit ajouté à la boutique');redraw()}
  else if(i==='ft'){e.preventDefault();var a=me();if(!a||a.role!=='admin')return;mk(f.email.value,f.fn.value,f.ln.value,f.pw.value,f.elements.rl.value).then(function(n){toast(n?'Compte équipe créé':'Cet e-mail est déjà utilisé');if(n)redraw()})}}
 document.addEventListener('submit',function(e){try{onSub(e)}catch(x){var a=$('ae');if(a)a.textContent='Erreur technique : '+x.message;else toast('Erreur : '+x.message)}});
 /* envoi des formulaires sans dépendre de la soumission native (bloquée dans certains aperçus) */
