@@ -990,7 +990,7 @@ var MEM={},LS={g:function(k,d){try{var r=MEM.hasOwnProperty(k)?MEM[k]:localStora
 function users(){return []}
 function orders(){return LS.g('fl_orders',[])}
 function me(){return CURRENT_USER}
-function isS(u){return false}
+function isS(u){return !!u&&u.role==='admin'}
 function upd(id,fn){}
 function mk(){return Promise.reject(new Error('Les comptes locaux sont désactivés.'))}
 function saveOrder(f,num,T){var u=me(),L=orders(),it=Object.keys(cart).map(function(k){return{k:k,n:cart[k].n,p:cart[k].p,q:cart[k].q}});L.unshift({num:num,d:new Date().toISOString(),uid:u?u.id:'',email:f.email.value.trim().toLowerCase(),name:f.fn.value+' '+f.ln.value,addr:f.ad.value+', '+f.zp.value+' '+f.vi.value+', '+f.pa.value,codes:pcodes.map(function(c){return c.code}),items:it,sub:T.s,disc:T.d,ship:T.sh,total:T.t,st:'att'});LS.s('fl_orders',L);supabaseClient.from('orders').insert({order_number:num,email:f.email.value.trim().toLowerCase(),name:f.fn.value+' '+f.ln.value,address:f.ad.value+', '+f.zp.value+' '+f.vi.value+', '+f.pa.value,items:it,subtotal:T.s,discount:T.d,shipping:T.sh,total:T.t,promo_codes:pcodes.map(function(c){return c.code})}).then(function(r){if(r.error)console.warn('Supabase order insert failed',r.error)});stk({items:it},-1);shopRefresh()}
@@ -1053,7 +1053,7 @@ document.addEventListener('click',function(e){var t=e.target,x;
  var mm=$('um');if(!mm.hidden&&!t.closest('[data-acc]'))mm.hidden=true;
  if(t.closest('[data-login]')){openA('login');return}
  if(x=t.closest('[data-acc]')){e.preventDefault();if(me())menu(x);else openA('login');return}
- if(x=t.closest('[data-am]')){am=x.dataset.am;authV();return}
+ if(x=t.closest('[data-am]')){AUTH_MODE=x.dataset.am;am=AUTH_MODE;authV();return}
  if(t.closest('#ax')){closeA();return}
  if(t.closest('[data-out]')){refAcc();toast('Vous êtes déconnecté·e');go('#');return}
  if(x=t.closest('[data-tab]')){var p=x.dataset.tab.split(':');tab[p[0]]=p[1];redraw();return}
@@ -1088,10 +1088,10 @@ document.addEventListener('submit',function(e){try{onSub(e)}catch(x){var a=$('ae
 var CURRENT_USER=null,AUTH_MODE='login',AUTH_BUSY=false;
 function profileUser(authUser,profile){
  var md=(authUser&&authUser.user_metadata)||{};
- return {id:authUser.id,email:authUser.email||'',fn:(profile&&profile.first_name)||md.first_name||'',ln:(profile&&profile.last_name)||md.last_name||'',role:'client',d:authUser.created_at||new Date().toISOString(),tel:(profile&&profile.phone)||'',addr:'',zip:'',city:''};
+ return {id:authUser.id,email:authUser.email||'',fn:(profile&&profile.first_name)||md.first_name||'',ln:(profile&&profile.last_name)||md.last_name||'',role:(profile&&profile.role)||'client',d:authUser.created_at||new Date().toISOString(),tel:(profile&&profile.phone)||'',addr:'',zip:'',city:''};
 }
 function me(){return CURRENT_USER}
-function isS(u){return false}
+function isS(u){return !!u&&u.role==='admin'}
 function authErrorMessage(e){var m=(e&&e.message)||'';if(/invalid login credentials|invalid email or password/i.test(m))return 'E-mail ou mot de passe incorrect.';if(/email not confirmed/i.test(m))return 'Veuillez confirmer votre adresse e-mail avant de vous connecter.';if(/user already registered|already been registered/i.test(m))return 'Un compte existe déjà avec cet e-mail.';if(/password.*(short|characters)|at least.*password/i.test(m))return 'Mot de passe trop court : 8 caractères minimum.';if(/invalid.*email/i.test(m))return 'Adresse e-mail invalide.';return m||'Une erreur est survenue. Veuillez réessayer.'}
 function authV(){
  var L=AUTH_MODE==='login',R=AUTH_MODE==='reset',title=R?'Réinitialiser le mot de passe':(L?'Connexion':'Créer un compte');
@@ -1101,7 +1101,7 @@ function openA(m){AUTH_MODE=m||'login';authV();$('am').classList.add('on');$('ov
 function afterAuth(u){closeA();CURRENT_USER=u;refAcc();var h=curH||location.hash;if(/^#\/huile/.test(h))view(h);else{curH=null;go('#/compte')}}
 async function hydrateAuth(authUser){
  if(!authUser){CURRENT_USER=null;refAcc();return}
- var q=await supabaseClient.from('profiles').select('first_name,last_name,email,phone').eq('id',authUser.id).maybeSingle();
+ var q=await supabaseClient.from('profiles').select('first_name,last_name,email,phone,role').eq('id',authUser.id).maybeSingle();
  CURRENT_USER=profileUser(authUser,q.data);refAcc();
 }
 async function authSubmit(e){
@@ -1134,7 +1134,7 @@ onSub=async function(e){
  }
  legacyOnSub(e);
 };
-refAcc=function(){var u=me();document.querySelectorAll('[data-acc]').forEach(function(a){a.innerHTML=u?esc((u.fn||u.email||'Compte').slice(0,18)):'Connexion';a.classList.toggle('avt',!!u);a.setAttribute('aria-label',u?'Menu du compte de '+(u.fn||u.email):'Connexion')});document.querySelectorAll('[data-adm]').forEach(function(a){a.hidden=true})};
+refAcc=function(){var u=me();document.querySelectorAll('[data-acc]').forEach(function(a){a.innerHTML=u?esc((u.fn||u.email||'Compte').slice(0,18)):'Connexion';a.classList.toggle('avt',!!u);a.setAttribute('aria-label',u?'Menu du compte de '+(u.fn||u.email):'Connexion')});document.querySelectorAll('[data-adm]').forEach(function(a){a.hidden=!isS(u)})};
 menu=function(x){var u=me(),m=$('um'),r=x.getBoundingClientRect();if(!u)return;if(!m.hidden){m.hidden=true;return}m.innerHTML='<p>'+esc((u.fn+' '+u.ln).trim())+'<br>'+esc(u.email)+'</p><a href="#/compte">Mon compte</a><button data-out type="button">Se déconnecter</button>';m.hidden=false;m.style.top=(r.bottom+8)+'px';m.style.right=Math.max(12,window.innerWidth-r.right)+'px'};
 // Déconnexion réelle et mot de passe oublié.
 document.addEventListener('click',function(e){if(e.target.closest('[data-forgot]')){e.preventDefault();openA('reset');return}if(e.target.closest('[data-out]')){supabaseClient.auth.signOut().then(function(){CURRENT_USER=null;refAcc();toast('Vous êtes déconnecté·e');go('#')});return}});
