@@ -1135,7 +1135,7 @@ onSub=async function(e){
  legacyOnSub(e);
 };
 refAcc=function(){var u=me();document.querySelectorAll('[data-acc]').forEach(function(a){a.innerHTML=u?esc((u.fn||u.email||'Compte').slice(0,18)):'Connexion';a.classList.toggle('avt',!!u);a.setAttribute('aria-label',u?'Menu du compte de '+(u.fn||u.email):'Connexion')});document.querySelectorAll('[data-adm]').forEach(function(a){a.hidden=!isS(u)})};
-menu=function(x){var u=me(),m=$('um'),r=x.getBoundingClientRect();if(!u)return;if(!m.hidden){m.hidden=true;return}m.innerHTML='<p>'+esc((u.fn+' '+u.ln).trim())+'<br>'+esc(u.email)+'</p><a href="#/compte">Mon compte</a><button data-out type="button">Se déconnecter</button>';m.hidden=false;m.style.top=(r.bottom+8)+'px';m.style.right=Math.max(12,window.innerWidth-r.right)+'px'};
+menu=function(x){var u=me(),m=$('um'),r=x.getBoundingClientRect();if(!u)return;if(!m.hidden){m.hidden=true;return}m.innerHTML='<p>'+esc((u.fn+' '+u.ln).trim())+'<br>'+esc(u.email)+'</p><a href="#/compte">Mon compte</a>'+(isS(u)?'<a href="#/admin">Espace gestion</a>':'')+'<button data-out type="button">Se déconnecter</button>';m.hidden=false;m.style.top=(r.bottom+8)+'px';m.style.right=Math.max(12,window.innerWidth-r.right)+'px'};
 // Déconnexion réelle et mot de passe oublié.
 document.addEventListener('click',function(e){if(e.target.closest('[data-forgot]')){e.preventDefault();openA('reset');return}if(e.target.closest('[data-out]')){supabaseClient.auth.signOut().then(function(){CURRENT_USER=null;refAcc();toast('Vous êtes déconnecté·e');go('#')});return}});
 supabaseClient.auth.onAuthStateChange(function(event,session){setTimeout(function(){hydrateAuth(session&&session.user)},0)});
