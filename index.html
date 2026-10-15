@@ -878,7 +878,13 @@ async function bootCatalog(){await loadSupabaseProducts();renderGrid();apply()}
 bootCatalog();
 
 var newsletterForm=document.getElementById('newsletterForm');
-if(newsletterForm)newsletterForm.addEventListener('submit',async function(e){e.preventDefault();var email=new FormData(newsletterForm).get('email').trim().toLowerCase();var result=await supabaseClient.from('newsletter_subscribers').insert({email:email});if(result.error&&result.error.code!=='23505'){toast('Inscription impossible pour le moment');return}newsletterForm.reset();toast('Merci, vous êtes inscrit·e');});
+if(newsletterForm)newsletterForm.addEventListener('submit',async function(e){
+ e.preventDefault();var input=new FormData(newsletterForm).get('email'),email=String(input||'').trim().toLowerCase();
+ if(!email){toast('Veuillez saisir une adresse e-mail.');return}
+ var result=await supabaseClient.from('newsletter_subscribers').insert({email:email});
+ if(result.error&&result.error.code!=='23505'){console.error(result.error);toast('Inscription impossible pour le moment.');return}
+ newsletterForm.reset();toast(result.error?'Cette adresse est déjà inscrite.':'Merci, vous êtes inscrit·e !');
+});
 function apply(){var q=$('q').value.trim().toLowerCase(),v=0;
  $('need').children[0].parentNode.querySelectorAll('.chip').forEach(function(c){c.style.display=(G==='all'||G==='he')?'':'none'});
  document.querySelectorAll('.p').forEach(function(p){var ok=(G==='all'||p.dataset.g===G)&&(F==='all'||p.dataset.t===F)&&p.dataset.n.indexOf(q)>-1;p.classList.toggle('hide',!ok);if(ok)v++});
@@ -1114,9 +1120,60 @@ document.addEventListener('keydown',function(e){var t=e.target;if(e.key!=='Enter
 /* bouton temporaire : ouvre la gestion sans mot de passe */
 $('tmpadm').addEventListener('click',function(){try{var a=users().filter(function(u){return u.role==='admin'})[0],go2=function(u){LS.s('fl_session',u.id);closeA();refAcc();curH=null;toast('Connecté en administrateur (accès temporaire)');go('#/admin')};if(a)go2(a);else mk('admin@franchomme.fr','Équipe','Boutique','Admin2026!','admin').then(go2)}catch(x){toast('Erreur : '+x.message)}});
 if(!users().some(function(u){return u.role==='admin'}))mk('admin@franchomme.fr','Équipe','Boutique','Admin2026!','admin');
+
+/* ===== Supabase Auth (remplace l'ancien compte démo local) ===== */
+var CURRENT_USER=null,AUTH_MODE='login',AUTH_BUSY=false;
+function profileUser(authUser,profile){
+ var md=(authUser&&authUser.user_metadata)||{};
+ return {id:authUser.id,email:authUser.email||'',fn:(profile&&profile.first_name)||md.first_name||'',ln:(profile&&profile.last_name)||md.last_name||'',role:'client',d:authUser.created_at||new Date().toISOString(),tel:(profile&&profile.phone)||'',addr:'',zip:'',city:''};
+}
+function me(){return CURRENT_USER}
+function isS(u){return false}
+function authErrorMessage(e){var m=(e&&e.message)||'';if(/invalid login credentials/i.test(m))return 'E-mail ou mot de passe incorrect.';if(/email not confirmed/i.test(m))return 'Veuillez confirmer votre adresse e-mail avant de vous connecter.';if(/user already registered/i.test(m))return 'Un compte existe déjà avec cet e-mail.';return m||'Une erreur est survenue. Veuillez réessayer.'}
+function authV(){
+ var L=AUTH_MODE==='login',R=AUTH_MODE==='reset',title=R?'Réinitialiser le mot de passe':(L?'Connexion':'Créer un compte');
+ $('ab').innerHTML='<div class="tabs" style="margin:14px 0"><button class="chip'+(L?' on':'')+'" data-am="login" type="button">Connexion</button><button class="chip'+(!L&&!R?' on':'')+'" data-am="signup" type="button">Créer un compte</button></div><form id="'+(R?'fr':(L?'fl':'fs'))+'" class="fld" novalidate><h3 class="h" style="font-size:34px">'+title+'</h3>'+(!L&&!R?'<div class="two"><input name="fn" placeholder="Prénom" autocomplete="given-name" required><input name="ln" placeholder="Nom" autocomplete="family-name" required></div>':'')+'<input type="email" name="email" placeholder="E-mail" autocomplete="email" required>'+(!R?'<input type="password" name="pw" placeholder="Mot de passe'+(L?'':' (8 caractères min.)')+'" autocomplete="'+(L?'current-password':'new-password')+'" required>':'')+(!L&&!R?'<input type="password" name="pw2" placeholder="Confirmer le mot de passe" autocomplete="new-password" required>':'')+'<p class="note err" id="ae" role="alert"></p><button class="btn fill" type="submit">'+(R?'Envoyer le lien':(L?'Se connecter':'Créer mon compte'))+'</button>'+(L?'<button class="rm" data-forgot type="button">Mot de passe oublié ?</button>':'')+(R?'<button class="rm" data-am="login" type="button">Retour à la connexion</button>':'')+'</form>';
+}
+function openA(m){AUTH_MODE=m||'login';authV();$('am').classList.add('on');$('ov').classList.add('on');$('am').setAttribute('aria-hidden','false')}
+function afterAuth(u){closeA();CURRENT_USER=u;refAcc();var h=curH||location.hash;if(/^#\/huile/.test(h))view(h);else{curH=null;go('#/compte')}}
+async function hydrateAuth(authUser){
+ if(!authUser){CURRENT_USER=null;refAcc();return}
+ var q=await supabaseClient.from('profiles').select('first_name,last_name,email,phone').eq('id',authUser.id).maybeSingle();
+ CURRENT_USER=profileUser(authUser,q.data);refAcc();
+}
+async function authSubmit(e){
+ var f=e.target;if(!/^f[slr]$/.test(f.id))return false;e.preventDefault();if(AUTH_BUSY)return false;
+ var er=function(m){var a=$('ae');if(a)a.textContent=m},email=String(f.email.value||'').trim().toLowerCase();er('');
+ if(!email||!/^\S+@\S+\.\S+$/.test(email)){er('Veuillez saisir une adresse e-mail valide.');return false}
+ AUTH_BUSY=true;var r;
+ try{
+  if(f.id==='fl')r=await supabaseClient.auth.signInWithPassword({email:email,password:f.pw.value});
+  else if(f.id==='fs'){
+   if(!f.fn.value.trim()||!f.ln.value.trim()){er('Veuillez renseigner votre prénom et votre nom.');return false}
+   if(f.pw.value.length<8){er('Mot de passe trop court : 8 caractères minimum.');return false}
+   if(f.pw.value!==f.pw2.value){er('Les deux mots de passe ne correspondent pas.');return false}
+   r=await supabaseClient.auth.signUp({email:email,password:f.pw.value,options:{data:{first_name:f.fn.value.trim(),last_name:f.ln.value.trim()},emailRedirectTo:location.origin+location.pathname}});
+   if(!r.error){if(r.data.session){await hydrateAuth(r.data.user);toast('Compte créé, bienvenue '+f.fn.value.trim());afterAuth(CURRENT_USER)}else{closeA();toast('Compte créé. Vérifiez votre e-mail pour confirmer votre inscription.')}}
+  } else r=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname+'#reset-password'});
+  if(r&&r.error)er(authErrorMessage(r.error));else if(f.id==='fl'){await hydrateAuth(r.data.user);toast('Connexion réussie, bonjour '+(CURRENT_USER.fn||''));afterAuth(CURRENT_USER)}else if(f.id==='fr'){closeA();toast('Lien de réinitialisation envoyé par e-mail.')}
+ }catch(x){er(authErrorMessage(x))}finally{AUTH_BUSY=false}return false;
+}
+onSub=function(e){if(/^f[slr]$/.test(e.target.id)){authSubmit(e);return}/* keep legacy checkout/profile handlers below */};
+// Intercepte les formulaires Auth avant l'ancien gestionnaire démo.
+document.addEventListener('submit',function(e){if(/^f[slr]$/.test(e.target.id)){e.preventDefault();authSubmit(e)}},true);
+// Update profile and password via Supabase for the existing account form.
+var legacyOnSub=onSub;
+onSub=async function(e){var id=e.target.id;if(id==='fi'){e.preventDefault();var f=e.target,u=me();if(!u)return;var er=$('ae');var q=await supabaseClient.from('profiles').update({first_name:f.fn.value.trim(),last_name:f.ln.value.trim(),phone:f.tel.value.trim()}).eq('id',u.id);if(q.error){toast('Informations impossibles à enregistrer.');return}if(f.pw.value){if(f.pw.value.length<8){toast('Mot de passe : 8 caractères minimum');return}var x=await supabaseClient.auth.updateUser({password:f.pw.value});if(x.error){toast(authErrorMessage(x.error));return}}await hydrateAuth((await supabaseClient.auth.getUser()).data.user);toast('Informations enregistrées');redraw();return}if(!/^f[slr]$/.test(id))return legacyOnSub(e)};
+refAcc=function(){var u=me();document.querySelectorAll('[data-acc]').forEach(function(a){a.innerHTML=u?esc((u.fn||u.email||'Compte').slice(0,18)):'Connexion';a.classList.toggle('avt',!!u);a.setAttribute('aria-label',u?'Menu du compte de '+(u.fn||u.email):'Connexion')});document.querySelectorAll('[data-adm]').forEach(function(a){a.hidden=true})};
+menu=function(x){var u=me(),m=$('um'),r=x.getBoundingClientRect();if(!u)return;if(!m.hidden){m.hidden=true;return}m.innerHTML='<p>'+esc((u.fn+' '+u.ln).trim())+'<br>'+esc(u.email)+'</p><a href="#/compte">Mon compte</a><button data-out type="button">Se déconnecter</button>';m.hidden=false;m.style.top=(r.bottom+8)+'px';m.style.right=Math.max(12,window.innerWidth-r.right)+'px'};
+// Déconnexion réelle et mot de passe oublié.
+document.addEventListener('click',function(e){if(e.target.closest('[data-forgot]')){e.preventDefault();openA('reset');return}if(e.target.closest('[data-out]')){supabaseClient.auth.signOut().then(function(){CURRENT_USER=null;refAcc();toast('Vous êtes déconnecté·e');go('#')});return}});
+supabaseClient.auth.onAuthStateChange(function(event,session){setTimeout(function(){hydrateAuth(session&&session.user)},0)});
+supabaseClient.auth.getSession().then(function(r){hydrateAuth(r.data.session&&r.data.session.user)});
 refAcc();
 apply();draw();route();
 </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
