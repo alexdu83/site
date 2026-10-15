@@ -989,25 +989,13 @@ function viewX(h){var m2=h.match(/^#\/produit\/(\d+)$/),m=h.match(/^#\/huile\/(.
 var MEM={},LS={g:function(k,d){try{var r=MEM.hasOwnProperty(k)?MEM[k]:localStorage.getItem(k),v=JSON.parse(r);return v==null?d:v}catch(e){return d}},s:function(k,v){var j=JSON.stringify(v);try{localStorage.setItem(k,j);delete MEM[k]}catch(e){MEM[k]=j}}},
  ST={att:['En attente','#b8643f'],prep:['En préparation','#a8741f'],exp:['Expédiée','#456f7b'],liv:['Livrée','#4f6b45'],ann:['Annulée','#6e6750']},
  tab=Object.assign({compte:'cmd',admin:'dash'},LS.g('fl_tab',{})),ofl='all',oqv='',am='login';
-function rr(v,a){return(v>>>a)|(v<<(32-a))}
-function sha(s){var mp=Math.pow,W=mp(2,32),i,j,r='',w=[],L=s.length*8,hs=[],k=[],c={},p=0,o;
- s+='\x80';while(s.length%64-56)s+='\x00';
- for(i=0;i<s.length;i++)w[i>>2]|=s.charCodeAt(i)<<((3-i)%4)*8;
- w[w.length]=(L/W)|0;w[w.length]=L;
- for(i=2;p<64;i++)if(!c[i]){for(j=0;j<313;j+=i)c[j]=i;if(p<8)hs[p]=(mp(i,.5)*W)|0;k[p++]=(mp(i,1/3)*W)|0}
- for(j=0;j<w.length;){var z=w.slice(j,j+=16);o=hs;hs=hs.slice(0,8);
-  for(i=0;i<64;i++){var w15=z[i-15],w2=z[i-2],a=hs[0],e=hs[4],t1=hs[7]+(rr(e,6)^rr(e,11)^rr(e,25))+((e&hs[5])^(~e&hs[6]))+k[i]+(z[i]=(i<16)?z[i]:(z[i-16]+(rr(w15,7)^rr(w15,18)^(w15>>>3))+z[i-7]+(rr(w2,17)^rr(w2,19)^(w2>>>10))|0)),t2=(rr(a,2)^rr(a,13)^rr(a,22))+((a&hs[1])^(a&hs[2])^(hs[1]&hs[2]));hs=[(t1+t2)|0].concat(hs);hs[4]=(hs[4]+t1)|0}
-  for(i=0;i<8;i++)hs[i]=(hs[i]+o[i])|0}
- for(i=0;i<8;i++)for(j=3;j+1;j--){var b=(hs[i]>>(j*8))&255;r+=((b<16)?0:'')+b.toString(16)}return r}
-function H(s){return Promise.resolve(sha(unescape(encodeURIComponent(s))))}
-function salt(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}
-function users(){return LS.g('fl_users',[])}
+// Les comptes et mots de passe sont gérés exclusivement par Supabase Auth.
+function users(){return []}
 function orders(){return LS.g('fl_orders',[])}
-function me(){var id=LS.g('fl_session',''),r=users().filter(function(u){return u.id===id});return r[0]||null}
-function isS(u){return !!u&&(u.role==='staff'||u.role==='admin')}
-function fmtD(d){return new Date(d).toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'short'})}
-function upd(id,fn){var L=users();L.forEach(function(u){if(u.id===id)fn(u)});LS.s('fl_users',L)}
-function mk(email,fn,ln,pw,role){email=email.trim().toLowerCase();if(users().some(function(u){return u.email===email}))return Promise.resolve(null);var s=salt();return H(s+pw).then(function(h){var u={id:'u'+Date.now()+Math.floor(Math.random()*1e3),email:email,fn:fn.trim(),ln:ln.trim(),role:role,s:s,h:h,d:new Date().toISOString(),tel:'',addr:'',zip:'',city:''},L=users();L.push(u);LS.s('fl_users',L);return u})}
+function me(){return CURRENT_USER}
+function isS(u){return false}
+function upd(id,fn){}
+function mk(){return Promise.reject(new Error('Les comptes locaux sont désactivés.'))}
 function saveOrder(f,num,T){var u=me(),L=orders(),it=Object.keys(cart).map(function(k){return{k:k,n:cart[k].n,p:cart[k].p,q:cart[k].q}});L.unshift({num:num,d:new Date().toISOString(),uid:u?u.id:'',email:f.email.value.trim().toLowerCase(),name:f.fn.value+' '+f.ln.value,addr:f.ad.value+', '+f.zp.value+' '+f.vi.value+', '+f.pa.value,codes:pcodes.map(function(c){return c.code}),items:it,sub:T.s,disc:T.d,ship:T.sh,total:T.t,st:'att'});LS.s('fl_orders',L);supabaseClient.from('orders').insert({order_number:num,email:f.email.value.trim().toLowerCase(),name:f.fn.value+' '+f.ln.value,address:f.ad.value+', '+f.zp.value+' '+f.vi.value+', '+f.pa.value,items:it,subtotal:T.s,discount:T.d,shipping:T.sh,total:T.t,promo_codes:pcodes.map(function(c){return c.code})}).then(function(r){if(r.error)console.warn('Supabase order insert failed',r.error)});stk({items:it},-1);shopRefresh()}
 function stk(o,sg){(o.items||[]).forEach(function(x){var p=ALL.filter(function(a){return a.g+a.n===x.k})[0];if(p&&p.s!=null)setProd(ALL.indexOf(p),function(v){v.s=Math.max(0,p.s+sg*x.q)},1)})}
 function shopRefresh(){dirty=1;if(!document.body.classList.contains('det')){dirty=0;renderGrid();apply()}}
@@ -1037,7 +1025,7 @@ function loadDemo(){var N=[['Camille','Martin'],['Lucas','Bernard'],['Inès','Mo
   sts.forEach(function(st,k){var u=U[k%U.length];if(!u)return;var it=[A[(k*7)%A.length],A[(k*13+3)%A.length]].map(function(o,j){return{k:o.g+o.n,n:o.n,p:o.p,q:1+((k+j)%3)}}),sub=it.reduce(function(a,x){return a+x.p*x.q},0),sh=sub>=FREE?0:SHIP;
    L.push({num:'FR-9'+(1000+k*37),d:new Date(Date.now()-k*864e5).toISOString(),uid:u.id,email:u.email,name:u.fn+' '+u.ln,addr:u.addr+', '+u.zip+' '+u.city+', France',items:it,sub:sub,disc:0,ship:sh,total:sub+sh,st:st,demo:1})});
   L.sort(function(a,b){return new Date(b.d)-new Date(a.d)});LS.s('fl_orders',L);toast('Données de démonstration chargées');redraw()})}
-function clearDemo(){LS.s('fl_users',users().filter(function(u){return !u.demo}));LS.s('fl_orders',orders().filter(function(o){return !o.demo}));toast('Données de démonstration supprimées');redraw()}
+function clearDemo(){LS.s('fl_orders',orders().filter(function(o){return !o.demo}));toast('Données de démonstration supprimées');redraw()}
 function dash(){var O=orders(),live=O.filter(function(o){return o.st!=='ann'}),sum=function(a){return a.reduce(function(s,o){return s+o.total},0)},P=O.filter(function(o){return o.st==='att'}),R=O.filter(function(o){return o.st==='prep'}),m=live.filter(function(o){return Date.now()-new Date(o.d)<2592e6}),cl=users().filter(function(x){return x.role==='client'}).length,low=ALL.filter(function(o){return!o.del&&!o.h&&o.s!=null&&o.s<=5}),bs={};
  live.forEach(function(o){o.items.forEach(function(i){bs[i.n]=(bs[i.n]||0)+i.q})});var top=Object.keys(bs).sort(function(a,b){return bs[b]-bs[a]}).slice(0,5);
  return'<div class="tabs"><button class="btn sm" data-demo type="button">'+(hasDemo()?'Supprimer les données de démonstration':'Charger des données de démonstration')+'</button></div><div class="kp">'+[['À traiter',P.length],['À expédier',R.length],['CA total',eur(sum(live))],['CA 30 jours',eur(sum(m))],['Commandes',O.length],['Clients',cl]].map(function(k){return'<div>'+k[0]+'<b>'+k[1]+'</b></div>'}).join('')+'</div><h2 class="sh2">Commandes à traiter</h2>'+(P.length?P.slice(0,5).map(function(o){return oc(o,1)}).join(''):'<p class="empty">Aucune commande en attente.</p>')+'<h2 class="sh2">Stock à surveiller</h2>'+(low.length?'<ul class="inf">'+low.map(function(o){return'<li>'+esc(o.n)+' : '+(o.s<=0?'épuisé':o.s+' restant(s)')+'</li>'}).join('')+'</ul>':'<p class="empty">Aucun stock bas (seuil : 5 unités, pour les produits dont le stock est suivi).</p>')+'<h2 class="sh2">Meilleures ventes</h2>'+(top.length?'<ul class="inf">'+top.map(function(n){return'<li>'+esc(n)+' : '+bs[n]+' vendu(s)</li>'}).join('')+'</ul>':'<p class="empty">Pas encore de ventes.</p>')+'<h2 class="sh2">Informations du site</h2><ul class="inf"><li>Produits en ligne : '+ALL.filter(function(o){return!o.h}).length+' sur '+ALL.filter(function(o){return!o.del}).length+'</li><li>Livraison : '+eur(SHIP)+', offerte dès '+eur(FREE)+'</li><li>Codes promo actifs : '+(SET.codes.filter(function(c){return c.on}).map(function(c){return c.code+' (−'+c.pct+' %)'}).join(', ')||'aucun')+'</li><li>Prix indicatif des huiles essentielles : '+eur(HEP)+' / 10 ml</li></ul>'}
@@ -1070,7 +1058,7 @@ document.addEventListener('click',function(e){var t=e.target,x;
  if(x=t.closest('[data-acc]')){e.preventDefault();if(me())menu(x);else openA('login');return}
  if(x=t.closest('[data-am]')){am=x.dataset.am;authV();return}
  if(t.closest('#ax')){closeA();return}
- if(t.closest('[data-out]')){LS.s('fl_session','');refAcc();toast('Vous êtes déconnecté·e');go('#');return}
+ if(t.closest('[data-out]')){refAcc();toast('Vous êtes déconnecté·e');go('#');return}
  if(x=t.closest('[data-tab]')){var p=x.dataset.tab.split(':');tab[p[0]]=p[1];redraw();return}
  if(x=t.closest('[data-rmc]')){pcodes=pcodes.filter(function(c){return c.code!==x.dataset.rmc});draw();return}
  if(x=t.closest('[data-csv]')){csvOrders();return}
@@ -1080,7 +1068,7 @@ document.addEventListener('click',function(e){var t=e.target,x;
 if(t.closest('#nimgx')){newImg='';var fi=$('nimg');if(fi)fi.value='';nprev();return}
 if(t.closest('[data-demo]')){if(!isS(me()))return;if(hasDemo())clearDemo();else loadDemo();return}
  if(x=t.closest('[data-of]')){ofl=x.dataset.of;redraw();return}
- if(x=t.closest('[data-del]')){var u=me(),L=users(),v=L.filter(function(a){return a.id===x.dataset.del})[0];if(!u||u.role!=='admin'||!v||v.id===u.id)return;if(v.role==='admin'&&L.filter(function(a){return a.role==='admin'}).length<2){toast('Il doit rester un administrateur');return}if(confirm('Supprimer le compte '+v.email+' ?')){LS.s('fl_users',L.filter(function(a){return a.id!==v.id}));redraw()}}});
+ if(x=t.closest('[data-del]')){return}});
 $('ov').addEventListener('click',closeA);
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeA()});
 document.addEventListener('input',function(e){var i=e.target.id;if(i==='oq'){oqv=e.target.value;$('ol').innerHTML=ordList()}if(i==='pq')$('pl').innerHTML=prdRows(e.target.value,$('pg').value)});
@@ -1097,30 +1085,11 @@ if(d.pp!==undefined){if(isNaN(v)||v<0){toast('Prix invalide');return}setProd(d.p
  if(d.cs!==undefined){if(me().role!=='admin')return;SET.codes[+d.cs].on=t.checked?1:0;saveSet();toast(t.checked?'Code activé':'Code désactivé');return}
  if(d.cc!==undefined){if(me().role!=='admin')return;SET.codes[+d.cc].cum=t.checked?1:0;saveSet();toast(t.checked?'Code cumulable':'Code non cumulable');return}
  if(d.st){var n=d.st;updOrder(n,function(o){if(o.st===t.value)return;var was=o.st==='ann',now=t.value==='ann';if(!was&&now)stk(o,1);if(was&&!now)stk(o,-1);o.st=t.value});shopRefresh();toast('Commande '+n+' : '+ST[t.value][0]);redraw()}});
-function onSub(e){var f=e.target,i=f.id,E=f.elements,er=function(m){var a=$('ae');if(a)a.textContent=m};
- if(i==='fl'){e.preventDefault();var em=f.email.value.trim().toLowerCase(),pw=f.pw.value;
-  if(!em){er('Veuillez saisir votre adresse e-mail.');return}if(!/^\S+@\S+\.\S+$/.test(em)){er('Adresse e-mail invalide.');return}if(!pw){er('Veuillez saisir votre mot de passe.');return}
-  var u=users().filter(function(x){return x.email===em})[0];if(!u){er('Compte inexistant : aucun compte ne correspond à cet e-mail. Créez un compte pour continuer.');return}
-  H(u.s+pw).then(function(h){if(h!==u.h){er('Mot de passe incorrect.');return}LS.s('fl_session',u.id);toast('Connexion réussie, bonjour '+u.fn);after(u)})}
- else if(i==='fs'){e.preventDefault();var em2=f.email.value.trim().toLowerCase(),p1=f.pw.value;
-  if(!f.fn.value.trim()||!f.ln.value.trim()){er('Veuillez renseigner votre prénom et votre nom.');return}if(!em2){er('Veuillez saisir votre adresse e-mail.');return}if(!/^\S+@\S+\.\S+$/.test(em2)){er('Adresse e-mail invalide.');return}
-  if(p1.length<8){er('Mot de passe trop court : 8 caractères minimum.');return}if(p1!==f.pw2.value){er('Les deux mots de passe ne correspondent pas.');return}
-  mk(em2,f.fn.value,f.ln.value,p1,'client').then(function(u){if(!u){er('Un compte existe déjà avec cet e-mail. Connectez-vous à la place.');return}LS.s('fl_session',u.id);toast('Compte créé, bienvenue '+u.fn);after(u,1)})}
- else if(i==='fi'){e.preventDefault();var c=me();if(!c)return;var pw=f.pw.value;if(pw&&pw.length<8){toast('Mot de passe : 8 caractères minimum');return}
-  var set=function(h,s){upd(c.id,function(x){x.fn=f.fn.value.trim();x.ln=f.ln.value.trim();x.tel=f.tel.value.trim();x.addr=f.addr.value.trim();x.zip=f.zip.value.trim();x.city=f.city.value.trim();if(h){x.h=h;x.s=s}});refAcc();toast('Informations enregistrées');redraw()};
-  if(pw){var s=salt();H(s+pw).then(function(h){set(h,s)})}else set()}
- else if(i==='fset'){e.preventDefault();var a1=me();if(!a1||a1.role!=='admin')return;var s1=parseFloat(E.ship.value),s2=parseFloat(E.free.value),s3=parseFloat(E.hep.value);if([s1,s2,s3].some(function(x){return isNaN(x)||x<0})){toast('Valeurs invalides');return}SET.ship=s1;SET.free=s2;SET.hep=s3;saveSet();toast('Réglages enregistrés');redraw()}
- else if(i==='fcode'){e.preventDefault();var a2=me();if(!a2||a2.role!=='admin')return;var cd=E.code.value.trim().toUpperCase().replace(/\s+/g,''),pc=parseInt(E.pct.value,10);if(!cd||isNaN(pc)||pc<1||pc>90){toast('Code ou remise invalide (1 à 90 %)');return}if(SET.codes.some(function(x){return x.code===cd})){toast('Ce code existe déjà');return}SET.codes.push({code:cd,pct:pc,on:1,cum:E.cum.checked?1:0});saveSet();toast('Code ajouté');redraw()}
- else if(i==='fpa'){e.preventDefault();if(!isS(me()))return;var n=E.n.value.trim(),pp=parseFloat(E.p.value),ss=E.s.value.trim();if(!n||isNaN(pp)||pp<0){toast('Un nom et un prix valides sont requis');return}var c={g:E.g.value,n:n,p:pp,l:E.l.value.trim(),tag:E.tag.value.trim(),d:E.d.value.trim(),v:E.v.value.trim()},CL=LS.g('fl_cust',[]);CL.push(c);LS.s('fl_cust',CL);ALL.push({g:c.g,n:c.n,p:c.p,r:0,l:c.l,tag:c.tag,d:c.d,o:false,mo:false,b:false,c:'p',cust:1,v:c.v,img:''});var ix=ALL.length-1,im=newImg;if(ss!==''||im)setProd(ix,function(x){if(ss!=='')x.s=Math.max(0,parseInt(ss,10)||0);if(im)x.i=im},1);newImg='';dirty=1;toast(im&&MEM.hasOwnProperty('fl_prod')?'Produit ajouté, mais photo non conservée (mémoire du navigateur pleine)':'Produit ajouté à la boutique');redraw()}
- else if(i==='ft'){e.preventDefault();var a=me();if(!a||a.role!=='admin')return;mk(f.email.value,f.fn.value,f.ln.value,f.pw.value,f.elements.rl.value).then(function(n){toast(n?'Compte équipe créé':'Cet e-mail est déjà utilisé');if(n)redraw()})}}
+function onSub(e){ /* Auth Supabase est traité par authSubmit ci-dessous. */ }
 document.addEventListener('submit',function(e){try{onSub(e)}catch(x){var a=$('ae');if(a)a.textContent='Erreur technique : '+x.message;else toast('Erreur : '+x.message)}});
 /* envoi des formulaires sans dépendre de la soumission native (bloquée dans certains aperçus) */
 document.addEventListener('click',function(e){var b=e.target.closest('button[type=submit]');if(!b||!b.form)return;var fm=b.form;e.preventDefault();if(!fm.noValidate&&!fm.checkValidity()){fm.reportValidity();return}fm.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true}))},true);
 document.addEventListener('keydown',function(e){var t=e.target;if(e.key!=='Enter'||t.tagName!=='INPUT'||!t.form||t.type==='search')return;var b=t.form.querySelector('button[type=submit]')||document.querySelector('button[type=submit][form="'+t.form.id+'"]');if(b){e.preventDefault();b.click()}});
-/* bouton temporaire : ouvre la gestion sans mot de passe */
-$('tmpadm').addEventListener('click',function(){try{var a=users().filter(function(u){return u.role==='admin'})[0],go2=function(u){LS.s('fl_session',u.id);closeA();refAcc();curH=null;toast('Connecté en administrateur (accès temporaire)');go('#/admin')};if(a)go2(a);else mk('admin@franchomme.fr','Équipe','Boutique','Admin2026!','admin').then(go2)}catch(x){toast('Erreur : '+x.message)}});
-if(!users().some(function(u){return u.role==='admin'}))mk('admin@franchomme.fr','Équipe','Boutique','Admin2026!','admin');
-
 /* ===== Supabase Auth (remplace l'ancien compte démo local) ===== */
 var CURRENT_USER=null,AUTH_MODE='login',AUTH_BUSY=false;
 function profileUser(authUser,profile){
@@ -1129,7 +1098,7 @@ function profileUser(authUser,profile){
 }
 function me(){return CURRENT_USER}
 function isS(u){return false}
-function authErrorMessage(e){var m=(e&&e.message)||'';if(/invalid login credentials/i.test(m))return 'E-mail ou mot de passe incorrect.';if(/email not confirmed/i.test(m))return 'Veuillez confirmer votre adresse e-mail avant de vous connecter.';if(/user already registered/i.test(m))return 'Un compte existe déjà avec cet e-mail.';return m||'Une erreur est survenue. Veuillez réessayer.'}
+function authErrorMessage(e){var m=(e&&e.message)||'';if(/invalid login credentials|invalid email or password/i.test(m))return 'E-mail ou mot de passe incorrect.';if(/email not confirmed/i.test(m))return 'Veuillez confirmer votre adresse e-mail avant de vous connecter.';if(/user already registered|already been registered/i.test(m))return 'Un compte existe déjà avec cet e-mail.';if(/password.*(short|characters)|at least.*password/i.test(m))return 'Mot de passe trop court : 8 caractères minimum.';if(/invalid.*email/i.test(m))return 'Adresse e-mail invalide.';return m||'Une erreur est survenue. Veuillez réessayer.'}
 function authV(){
  var L=AUTH_MODE==='login',R=AUTH_MODE==='reset',title=R?'Réinitialiser le mot de passe':(L?'Connexion':'Créer un compte');
  $('ab').innerHTML='<div class="tabs" style="margin:14px 0"><button class="chip'+(L?' on':'')+'" data-am="login" type="button">Connexion</button><button class="chip'+(!L&&!R?' on':'')+'" data-am="signup" type="button">Créer un compte</button></div><form id="'+(R?'fr':(L?'fl':'fs'))+'" class="fld" novalidate><h3 class="h" style="font-size:34px">'+title+'</h3>'+(!L&&!R?'<div class="two"><input name="fn" placeholder="Prénom" autocomplete="given-name" required><input name="ln" placeholder="Nom" autocomplete="family-name" required></div>':'')+'<input type="email" name="email" placeholder="E-mail" autocomplete="email" required>'+(!R?'<input type="password" name="pw" placeholder="Mot de passe'+(L?'':' (8 caractères min.)')+'" autocomplete="'+(L?'current-password':'new-password')+'" required>':'')+(!L&&!R?'<input type="password" name="pw2" placeholder="Confirmer le mot de passe" autocomplete="new-password" required>':'')+'<p class="note err" id="ae" role="alert"></p><button class="btn fill" type="submit">'+(R?'Envoyer le lien':(L?'Se connecter':'Créer mon compte'))+'</button>'+(L?'<button class="rm" data-forgot type="button">Mot de passe oublié ?</button>':'')+(R?'<button class="rm" data-am="login" type="button">Retour à la connexion</button>':'')+'</form>';
