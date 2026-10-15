@@ -969,8 +969,17 @@ else all.forEach(function(el){el.classList.add('in')});
 
 /* ===== navigation ===== */
 var TT=document.title,curH=null;
-function go(h){try{if(location.hash!==h)history.pushState(null,'',h)}catch(e){}route(h)}
-function route(h){h=h||location.hash;if(h===curH)return;curH=h;view(h)}
+function go(h){
+ h=h||'#';
+ try{if(location.hash!==h)location.hash=h;else route(h)}catch(e){route(h)}
+}
+function route(h){
+ h=h||location.hash||'#';
+ /* Ne pas ignorer une route identique : le rôle Supabase peut avoir été hydraté
+    après le premier rendu de la route. */
+ var same=h===curH;curH=h;
+ if(!same||/^#\/(compte|admin)$/.test(h))view(h);
+}
 function detailC(i){var o=ALL[i];if(!o||!o.cust||o.del||o.h){go('#boutique');return false}
  document.title=o.n+' — Pierre Franchomme';
  $('detail').innerHTML='<div class="dtop"><a href="#boutique" data-back>← Retour à la boutique</a><span class="tb"><a class="cart" href="#" data-acc>Connexion</a><a class="cart" href="#" id="open2">Panier <b id="count2">'+tot().c+'</b></a></span></div><div class="dgrid"><div class="dvis" style="--c:'+G0[o.g][1]+'">'+(o.img?'<img src="'+o.img+'" alt="">':'<svg><use href="#'+(o.g==='dif'?'diff':'bottle')+'"/></svg>')+'</div><div class="dtxt"><p class="cap">'+G0[o.g][0]+'</p><h1 class="h">'+esc(o.n)+'</h1>'+(o.l?'<p class="lat">'+esc(o.l)+'</p>':'')+(o.d?'<p class="lead">'+esc(o.d).replace(/\n/g,'<br>')+'</p>':'')+'<div class="dbuy"><span class="price">'+eur(o.p)+(o.r?' <s class="u">'+eur(o.r)+'</s>':'')+(o.v?' <small>/ '+esc(o.v)+'</small>':'')+'</span><button class="btn fill" data-i="'+i+'"'+(o.o?' disabled>Réappro.':'>Ajouter au panier')+'</button></div></div></div>'}
@@ -1003,7 +1012,7 @@ function mine(u){return orders().filter(function(o){return o.uid===u.id||o.email
 function ini(u){return((u.fn||'?')[0]+((u.ln||'')[0]||'')).toUpperCase()}
 function avH(u){return u?'<span class="av'+(isS(u)?' st':'')+'">'+esc(ini(u))+'</span>':'Connexion'}
 function refAcc(){var u=me();document.querySelectorAll('[data-acc]').forEach(function(a){a.innerHTML=avH(u);a.classList.toggle('avt',!!u);a.setAttribute('aria-label',u?'Menu du compte de '+u.fn:'Connexion')});document.querySelectorAll('[data-adm]').forEach(function(a){a.hidden=!isS(u)})}
-function menu(x){var u=me(),m=$('um'),r=x.getBoundingClientRect();if(!m.hidden){m.hidden=true;return}m.innerHTML='<p>'+esc(u.fn+' '+u.ln)+'<br>'+esc(u.email)+'</p><a href="#/compte">Mon compte</a>'+(isS(u)?'<a href="#/admin">Espace gestion</a>':'')+'<button data-out type="button">Se déconnecter</button>';m.hidden=false;m.style.top=(r.bottom+8)+'px';m.style.right=Math.max(12,window.innerWidth-r.right)+'px'}
+function menu(x){var u=me(),m=$('um'),r=x.getBoundingClientRect();if(!m.hidden){m.hidden=true;return}m.innerHTML='<p>'+esc(u.fn+' '+u.ln)+'<br>'+esc(u.email)+'</p><a href="#/compte">Mon compte</a>'+(isS(u)?'<a href="#/admin" data-admin-nav>Espace gestion</a>':'')+'<button data-out type="button">Se déconnecter</button>';m.hidden=false;m.style.top=(r.bottom+8)+'px';m.style.right=Math.max(12,window.innerWidth-r.right)+'px'}
 function oc(o,a){var op=Object.keys(ST).map(function(k){return'<option value="'+k+'"'+(k===o.st?' selected':'')+'>'+ST[k][0]+'</option>'}).join('');return '<article class="oc"><div class="oh"><b>'+o.num+'</b><span class="u">'+fmtD(o.d)+'</span><span class="st" style="--c:'+ST[o.st][1]+'">'+ST[o.st][0]+'</span><b>'+eur(o.total)+'</b></div>'+(a?'<p class="u">'+esc(o.name)+' · '+esc(o.email)+'<br>'+esc(o.addr)+(o.codes&&o.codes.length?'<br>Codes promo : '+esc(o.codes.join(', ')):'')+'</p>':'')+'<ul>'+o.items.map(function(i){return'<li>'+i.q+' × '+esc(i.n)+' — '+eur(i.p*i.q)+'</li>'}).join('')+'</ul>'+(!a&&o.tr?'<p class="u">Numéro de suivi : '+esc(o.tr)+'</p>':'')+(a?'<div class="oh"><label class="u">Statut : <select data-st="'+o.num+'">'+op+'</select></label><input class="q2" data-tr="'+o.num+'" placeholder="N° de suivi" value="'+esc(o.tr||'')+'"><input class="q2" data-nt="'+o.num+'" placeholder="Note interne" value="'+esc(o.nt||'')+'"></div>':'')+'</article>'}
 function head(cap,t,u){return'<div><p class="cap">'+cap+'</p><h1 class="h">'+esc(t)+'</h1><p class="u" style="margin-top:12px">'+esc(u.email)+' · '+({admin:'Administrateur',staff:'Équipe',client:'Client'}[u.role])+' <button class="rm" data-out type="button">Se déconnecter</button></p></div>'}
 function tbs(k,t){return'<div class="tabs">'+t.map(function(x){return'<button class="chip'+(tab[k]===x[0]?' on':'')+'" data-tab="'+k+':'+x[0]+'" type="button">'+x[1]+'</button>'}).join('')+'</div>'}
@@ -1049,6 +1058,7 @@ function closeA(){$('am').classList.remove('on');$('am').setAttribute('aria-hidd
 function after(u,reg){closeA();refAcc();var h=curH||location.hash;if(/^#\/huile/.test(h))view(h);else{curH=null;go(isS(u)&&!reg?'#/admin':'#/compte')}}
 
 document.addEventListener('click',function(e){var t=e.target,x;
+ if(x=t.closest('[data-admin-nav]')){e.preventDefault();var u=me();if(!isS(u)){go('#/compte');return}if($('um'))$('um').hidden=true;go('#/admin');return}
  if(x=t.closest('a[href^="#"]')){var h=x.getAttribute('href');if(h.length>1&&(h.indexOf('#/')===0||document.body.classList.contains('det'))){e.preventDefault();go(h);return}}
  var mm=$('um');if(!mm.hidden&&!t.closest('[data-acc]'))mm.hidden=true;
  if(t.closest('[data-login]')){openA('login');return}
@@ -1103,6 +1113,9 @@ async function hydrateAuth(authUser){
  if(!authUser){CURRENT_USER=null;refAcc();return}
  var q=await supabaseClient.from('profiles').select('first_name,last_name,email,phone,role').eq('id',authUser.id).maybeSingle();
  CURRENT_USER=profileUser(authUser,q.data);refAcc();
+ /* Rejouer la route après lecture de profiles : sinon une route #/admin
+    rendue trop tôt reste bloquée sur l'écran non connecté. */
+ if(/^#\/admin$/.test(location.hash))route(location.hash);
 }
 async function authSubmit(e){
  var f=e.target;if(!/^f[slr]$/.test(f.id))return false;e.preventDefault();if(AUTH_BUSY)return false;
@@ -1135,7 +1148,7 @@ onSub=async function(e){
  legacyOnSub(e);
 };
 refAcc=function(){var u=me();document.querySelectorAll('[data-acc]').forEach(function(a){a.innerHTML=u?esc((u.fn||u.email||'Compte').slice(0,18)):'Connexion';a.classList.toggle('avt',!!u);a.setAttribute('aria-label',u?'Menu du compte de '+(u.fn||u.email):'Connexion')});document.querySelectorAll('[data-adm]').forEach(function(a){a.hidden=!isS(u)})};
-menu=function(x){var u=me(),m=$('um'),r=x.getBoundingClientRect();if(!u)return;if(!m.hidden){m.hidden=true;return}m.innerHTML='<p>'+esc((u.fn+' '+u.ln).trim())+'<br>'+esc(u.email)+'</p><a href="#/compte">Mon compte</a>'+(isS(u)?'<a href="#/admin">Espace gestion</a>':'')+'<button data-out type="button">Se déconnecter</button>';m.hidden=false;m.style.top=(r.bottom+8)+'px';m.style.right=Math.max(12,window.innerWidth-r.right)+'px'};
+menu=function(x){var u=me(),m=$('um'),r=x.getBoundingClientRect();if(!u)return;if(!m.hidden){m.hidden=true;return}m.innerHTML='<p>'+esc((u.fn+' '+u.ln).trim())+'<br>'+esc(u.email)+'</p><a href="#/compte">Mon compte</a>'+(isS(u)?'<a href="#/admin" data-admin-nav>Espace gestion</a>':'')+'<button data-out type="button">Se déconnecter</button>';m.hidden=false;m.style.top=(r.bottom+8)+'px';m.style.right=Math.max(12,window.innerWidth-r.right)+'px'};
 // Déconnexion réelle et mot de passe oublié.
 document.addEventListener('click',function(e){if(e.target.closest('[data-forgot]')){e.preventDefault();openA('reset');return}if(e.target.closest('[data-out]')){supabaseClient.auth.signOut().then(function(){CURRENT_USER=null;refAcc();toast('Vous êtes déconnecté·e');go('#')});return}});
 supabaseClient.auth.onAuthStateChange(function(event,session){setTimeout(function(){hydrateAuth(session&&session.user)},0)});
