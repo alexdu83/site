@@ -406,8 +406,6 @@ footer{margin:16px;border-radius:24px;border:0}
 .um a,.um button{background:none;border:0;color:inherit;text-align:left;padding:10px 12px;border-radius:10px;font:500 14px var(--sans);cursor:pointer}
 .um a:hover,.um button:hover{background:var(--alt);text-decoration:none}
 .um p{padding:8px 12px;font-size:12px;color:var(--walnut)}
-.tmp{position:fixed;left:12px;bottom:12px;z-index:25;background:var(--clay);color:#fff;border:0;border-radius:12px;padding:12px 16px;font:700 12px var(--sans);text-transform:uppercase;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.3)}
-.tmp[hidden]{display:none}
 .fld textarea{background:transparent;border:1px solid var(--line);border-radius:14px;padding:14px;color:inherit;font:500 14px var(--sans);width:100%;resize:vertical}
 .p .dsc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 
@@ -651,7 +649,6 @@ footer{background:#e4d8bf;color:var(--walnut);border:1px solid var(--line)}
   <div class="df" id="df"></div>
 </aside>
 <div class="mdl" id="am" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Compte"><div class="mh"><h2 class="h">Compte</h2><button class="chip" id="ax" type="button">Fermer</button></div><div id="ab"></div></div>
-<button class="tmp" id="tmpadm" type="button" title="Bouton temporaire de test">Accès gestion (temporaire)</button>
 <div class="um" id="um" hidden></div>
 <div class="toast" id="toast" role="status"></div>
 
@@ -1005,7 +1002,7 @@ function saveSet(){LS.s('fl_set',SET);HEP=SET.hep;SHIP=SET.ship;FREE=SET.free;va
 function mine(u){return orders().filter(function(o){return o.uid===u.id||o.email===u.email})}
 function ini(u){return((u.fn||'?')[0]+((u.ln||'')[0]||'')).toUpperCase()}
 function avH(u){return u?'<span class="av'+(isS(u)?' st':'')+'">'+esc(ini(u))+'</span>':'Connexion'}
-function refAcc(){var u=me();document.querySelectorAll('[data-acc]').forEach(function(a){a.innerHTML=avH(u);a.classList.toggle('avt',!!u);a.setAttribute('aria-label',u?'Menu du compte de '+u.fn:'Connexion')});document.querySelectorAll('[data-adm]').forEach(function(a){a.hidden=!isS(u)});var tb=$('tmpadm');if(tb)tb.hidden=isS(u)}
+function refAcc(){var u=me();document.querySelectorAll('[data-acc]').forEach(function(a){a.innerHTML=avH(u);a.classList.toggle('avt',!!u);a.setAttribute('aria-label',u?'Menu du compte de '+u.fn:'Connexion')});document.querySelectorAll('[data-adm]').forEach(function(a){a.hidden=!isS(u)})}
 function menu(x){var u=me(),m=$('um'),r=x.getBoundingClientRect();if(!m.hidden){m.hidden=true;return}m.innerHTML='<p>'+esc(u.fn+' '+u.ln)+'<br>'+esc(u.email)+'</p><a href="#/compte">Mon compte</a>'+(isS(u)?'<a href="#/admin">Espace gestion</a>':'')+'<button data-out type="button">Se déconnecter</button>';m.hidden=false;m.style.top=(r.bottom+8)+'px';m.style.right=Math.max(12,window.innerWidth-r.right)+'px'}
 function oc(o,a){var op=Object.keys(ST).map(function(k){return'<option value="'+k+'"'+(k===o.st?' selected':'')+'>'+ST[k][0]+'</option>'}).join('');return '<article class="oc"><div class="oh"><b>'+o.num+'</b><span class="u">'+fmtD(o.d)+'</span><span class="st" style="--c:'+ST[o.st][1]+'">'+ST[o.st][0]+'</span><b>'+eur(o.total)+'</b></div>'+(a?'<p class="u">'+esc(o.name)+' · '+esc(o.email)+'<br>'+esc(o.addr)+(o.codes&&o.codes.length?'<br>Codes promo : '+esc(o.codes.join(', ')):'')+'</p>':'')+'<ul>'+o.items.map(function(i){return'<li>'+i.q+' × '+esc(i.n)+' — '+eur(i.p*i.q)+'</li>'}).join('')+'</ul>'+(!a&&o.tr?'<p class="u">Numéro de suivi : '+esc(o.tr)+'</p>':'')+(a?'<div class="oh"><label class="u">Statut : <select data-st="'+o.num+'">'+op+'</select></label><input class="q2" data-tr="'+o.num+'" placeholder="N° de suivi" value="'+esc(o.tr||'')+'"><input class="q2" data-nt="'+o.num+'" placeholder="Note interne" value="'+esc(o.nt||'')+'"></div>':'')+'</article>'}
 function head(cap,t,u){return'<div><p class="cap">'+cap+'</p><h1 class="h">'+esc(t)+'</h1><p class="u" style="margin-top:12px">'+esc(u.email)+' · '+({admin:'Administrateur',staff:'Équipe',client:'Client'}[u.role])+' <button class="rm" data-out type="button">Se déconnecter</button></p></div>'}
@@ -1046,7 +1043,7 @@ function page(k){var u=me(),D=$('detail');document.title=(k==='admin'?'Gestion':
 function redraw(){var y=window.scrollY;page(/admin/.test(curH||'')?'admin':'compte');window.scrollTo({top:y,behavior:'instant'})}
 
 /* modale connexion / inscription */
-function authV(){var L=am==='login';$('ab').innerHTML='<div class="tabs" style="margin:14px 0"><button class="chip'+(L?' on':'')+'" data-am="login" type="button">Connexion</button><button class="chip'+(L?'':' on')+'" data-am="signup" type="button">Créer un compte</button></div><form id="'+(L?'fl':'fs')+'" class="fld" novalidate>'+(L?'':'<div class="two"><input name="fn" placeholder="Prénom" autocomplete="given-name"><input name="ln" placeholder="Nom" autocomplete="family-name"></div>')+'<input type="email" name="email" placeholder="E-mail" autocomplete="email"><input type="password" name="pw" placeholder="Mot de passe'+(L?'':' (8 caractères min.)')+'" autocomplete="'+(L?'current-password':'new-password')+'">'+(L?'':'<input type="password" name="pw2" placeholder="Confirmer le mot de passe" autocomplete="new-password">')+'<p class="note err" id="ae" role="alert"></p><button class="btn fill" type="submit">'+(L?'Se connecter':'Créer mon compte')+'</button>'+(L?'<p class="note">Accès équipe de démonstration : admin@franchomme.fr / Admin2026!</p>':'')+'</form>'}
+function authV(){var L=am==='login';$('ab').innerHTML='<div class="tabs" style="margin:14px 0"><button class="chip'+(L?' on':'')+'" data-am="login" type="button">Connexion</button><button class="chip'+(L?'':' on')+'" data-am="signup" type="button">Créer un compte</button></div><form id="'+(L?'fl':'fs')+'" class="fld" novalidate>'+(L?'':'<div class="two"><input name="fn" placeholder="Prénom" autocomplete="given-name"><input name="ln" placeholder="Nom" autocomplete="family-name"></div>')+'<input type="email" name="email" placeholder="E-mail" autocomplete="email"><input type="password" name="pw" placeholder="Mot de passe'+(L?'':' (8 caractères min.)')+'" autocomplete="'+(L?'current-password':'new-password')+'">'+(L?'':'<input type="password" name="pw2" placeholder="Confirmer le mot de passe" autocomplete="new-password">')+'<p class="note err" id="ae" role="alert"></p><button class="btn fill" type="submit">'+(L?'Se connecter':'Créer mon compte')+'</button>'+'</form>'}
 function openA(m){am=m;authV();$('am').classList.add('on');$('ov').classList.add('on');$('am').setAttribute('aria-hidden','false')}
 function closeA(){$('am').classList.remove('on');$('am').setAttribute('aria-hidden','true');if(!$('drw').classList.contains('on'))$('ov').classList.remove('on')}
 function after(u,reg){closeA();refAcc();var h=curH||location.hash;if(/^#\/huile/.test(h))view(h);else{curH=null;go(isS(u)&&!reg?'#/admin':'#/compte')}}
@@ -1085,11 +1082,8 @@ if(d.pp!==undefined){if(isNaN(v)||v<0){toast('Prix invalide');return}setProd(d.p
  if(d.cs!==undefined){if(me().role!=='admin')return;SET.codes[+d.cs].on=t.checked?1:0;saveSet();toast(t.checked?'Code activé':'Code désactivé');return}
  if(d.cc!==undefined){if(me().role!=='admin')return;SET.codes[+d.cc].cum=t.checked?1:0;saveSet();toast(t.checked?'Code cumulable':'Code non cumulable');return}
  if(d.st){var n=d.st;updOrder(n,function(o){if(o.st===t.value)return;var was=o.st==='ann',now=t.value==='ann';if(!was&&now)stk(o,1);if(was&&!now)stk(o,-1);o.st=t.value});shopRefresh();toast('Commande '+n+' : '+ST[t.value][0]);redraw()}});
-function onSub(e){ /* Auth Supabase est traité par authSubmit ci-dessous. */ }
+function legacyOnSub(e){ /* formulaires panier et autres traitements existants */ }
 document.addEventListener('submit',function(e){try{onSub(e)}catch(x){var a=$('ae');if(a)a.textContent='Erreur technique : '+x.message;else toast('Erreur : '+x.message)}});
-/* envoi des formulaires sans dépendre de la soumission native (bloquée dans certains aperçus) */
-document.addEventListener('click',function(e){var b=e.target.closest('button[type=submit]');if(!b||!b.form)return;var fm=b.form;e.preventDefault();if(!fm.noValidate&&!fm.checkValidity()){fm.reportValidity();return}fm.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true}))},true);
-document.addEventListener('keydown',function(e){var t=e.target;if(e.key!=='Enter'||t.tagName!=='INPUT'||!t.form||t.type==='search')return;var b=t.form.querySelector('button[type=submit]')||document.querySelector('button[type=submit][form="'+t.form.id+'"]');if(b){e.preventDefault();b.click()}});
 /* ===== Supabase Auth (remplace l'ancien compte démo local) ===== */
 var CURRENT_USER=null,AUTH_MODE='login',AUTH_BUSY=false;
 function profileUser(authUser,profile){
@@ -1127,12 +1121,19 @@ async function authSubmit(e){
   if(r&&r.error)er(authErrorMessage(r.error));else if(f.id==='fl'){await hydrateAuth(r.data.user);toast('Connexion réussie, bonjour '+(CURRENT_USER.fn||''));afterAuth(CURRENT_USER)}else if(f.id==='fr'){closeA();toast('Lien de réinitialisation envoyé par e-mail.')}
  }catch(x){er(authErrorMessage(x))}finally{AUTH_BUSY=false}return false;
 }
-onSub=function(e){if(/^f[slr]$/.test(e.target.id)){authSubmit(e);return}/* keep legacy checkout/profile handlers below */};
-// Intercepte les formulaires Auth avant l'ancien gestionnaire démo.
-document.addEventListener('submit',function(e){if(/^f[slr]$/.test(e.target.id)){e.preventDefault();authSubmit(e)}},true);
 // Update profile and password via Supabase for the existing account form.
-var legacyOnSub=onSub;
-onSub=async function(e){var id=e.target.id;if(id==='fi'){e.preventDefault();var f=e.target,u=me();if(!u)return;var er=$('ae');var q=await supabaseClient.from('profiles').update({first_name:f.fn.value.trim(),last_name:f.ln.value.trim(),phone:f.tel.value.trim()}).eq('id',u.id);if(q.error){toast('Informations impossibles à enregistrer.');return}if(f.pw.value){if(f.pw.value.length<8){toast('Mot de passe : 8 caractères minimum');return}var x=await supabaseClient.auth.updateUser({password:f.pw.value});if(x.error){toast(authErrorMessage(x.error));return}}await hydrateAuth((await supabaseClient.auth.getUser()).data.user);toast('Informations enregistrées');redraw();return}if(!/^f[slr]$/.test(id))return legacyOnSub(e)};
+onSub=async function(e){
+ var id=e.target.id;
+ if(/^f[slr]$/.test(id)){await authSubmit(e);return}
+ if(id==='fi'){
+  e.preventDefault();var f=e.target,u=me();if(!u)return;
+  var q=await supabaseClient.from('profiles').update({first_name:f.fn.value.trim(),last_name:f.ln.value.trim(),phone:f.tel.value.trim()}).eq('id',u.id);
+  if(q.error){toast('Informations impossibles à enregistrer.');return}
+  if(f.pw.value){if(f.pw.value.length<8){toast('Mot de passe : 8 caractères minimum');return}var x=await supabaseClient.auth.updateUser({password:f.pw.value});if(x.error){toast(authErrorMessage(x.error));return}}
+  await hydrateAuth((await supabaseClient.auth.getUser()).data.user);toast('Informations enregistrées');redraw();return
+ }
+ legacyOnSub(e);
+};
 refAcc=function(){var u=me();document.querySelectorAll('[data-acc]').forEach(function(a){a.innerHTML=u?esc((u.fn||u.email||'Compte').slice(0,18)):'Connexion';a.classList.toggle('avt',!!u);a.setAttribute('aria-label',u?'Menu du compte de '+(u.fn||u.email):'Connexion')});document.querySelectorAll('[data-adm]').forEach(function(a){a.hidden=true})};
 menu=function(x){var u=me(),m=$('um'),r=x.getBoundingClientRect();if(!u)return;if(!m.hidden){m.hidden=true;return}m.innerHTML='<p>'+esc((u.fn+' '+u.ln).trim())+'<br>'+esc(u.email)+'</p><a href="#/compte">Mon compte</a><button data-out type="button">Se déconnecter</button>';m.hidden=false;m.style.top=(r.bottom+8)+'px';m.style.right=Math.max(12,window.innerWidth-r.right)+'px'};
 // Déconnexion réelle et mot de passe oublié.
