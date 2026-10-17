@@ -470,18 +470,36 @@ footer{background:#e4d8bf;color:var(--walnut);border:1px solid var(--line)}
 .p .vis{aspect-ratio:3/4;height:auto;min-height:300px;}
 .p .vis img{width:100%;height:100%;object-fit:cover;}
 .p h3{font-size:clamp(22px,2.4vw,34px);}
+
+/* ===== boutique premium / filtres ===== */
+.filters.filter-needs{align-items:center;gap:8px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.filter-heading{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--walnut);margin-right:4px}
+.filter-needs .chip{border-radius:999px;padding:9px 13px;font-size:11px;letter-spacing:.02em;text-transform:none}
+.filter-needs .chip.on{box-shadow:0 0 0 2px color-mix(in srgb,var(--saffron) 35%,transparent)}
+.filter-status{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--walnut)}
+.filter-reset{border:0;background:none;color:var(--clay);font:700 11px var(--sans);text-transform:uppercase;cursor:pointer;padding:5px}
+.format-editor{min-width:300px;display:grid;gap:7px}
+.format-row{display:grid;grid-template-columns:1.15fr .8fr .8fr auto;gap:5px;align-items:center}
+.format-row input{width:100%!important}
+.format-row button{border:0;background:none;color:var(--clay);font-size:20px;cursor:pointer;padding:3px 6px}
+.format-editor>.rm{justify-self:start;margin-top:2px}
+.p .vis svg{width:auto;height:78%;max-height:270px;filter:drop-shadow(0 12px 12px rgba(59,48,35,.16))}
+.p .vis{background:linear-gradient(145deg,color-mix(in srgb,var(--c) 18%,#fff8ea),color-mix(in srgb,var(--c) 34%,#eadfc8))}
+@media (min-width:901px){.grid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}.p .vis{min-height:330px}}
+@media (max-width:640px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:0}.p{padding:12px;gap:10px}.p .vis{min-height:230px}.p h3{font-size:22px}.p .btn.sm{padding:10px 9px;font-size:10px}.price{font-size:15px}.filter-needs{overflow-x:auto;flex-wrap:nowrap;margin-inline:-20px;padding-inline:20px}.filter-heading{flex:0 0 auto}.filter-status{flex:0 0 auto;margin-left:2px}.search{flex:0 0 100%;order:5}.format-editor{min-width:260px}}
 </style>
 </head>
 <body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="diff" viewBox="0 0 100 130"><path d="M25 70h50l-6 50c-1 6-6 8-10 8H41c-4 0-9-2-10-8z" fill="currentColor"/><rect x="30" y="60" width="40" height="12" rx="3" fill="#2c2c2c"/><path d="M50 50c-8-10 8-14 0-26M36 48c-6-8 6-11 0-20M64 48c-6-8 6-11 0-20" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/></symbol>
-  <symbol id="bottle" viewBox="0 0 80 190">
-    <rect x="30" y="2" width="20" height="16" rx="3" fill="#2c2c2c"/>
-    <path d="M33 18h14v14c0 4 18 10 18 28v114c0 6-4 12-10 12H25c-6 0-10-6-10-12V60c0-18 18-24 18-28z" fill="currentColor"/>
-    <rect x="22" y="84" width="36" height="58" rx="2" fill="#efe6cf"/>
-    <path d="M40 94c-7 8-7 18 0 26 7-8 7-18 0-26z" fill="#4f6b45"/>
-    <rect x="28" y="128" width="24" height="2" fill="#8d866f"/><rect x="31" y="134" width="18" height="2" fill="#8d866f"/>
+  <symbol id="bottle" viewBox="0 0 100 220">
+    <defs><linearGradient id="oilGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7df" stop-opacity=".92"/><stop offset=".42" stop-color="currentColor" stop-opacity=".94"/><stop offset="1" stop-color="#573e27" stop-opacity=".92"/></linearGradient></defs>
+    <rect x="38" y="4" width="24" height="22" rx="5" fill="#342d25"/><rect x="40" y="1" width="20" height="7" rx="3" fill="#6b5a43"/>
+    <path d="M40 25h20v16c0 5 22 13 22 34v121c0 10-7 18-17 18H35c-10 0-17-8-17-18V75c0-21 22-29 22-34z" fill="url(#oilGlass)" stroke="#fff7df" stroke-opacity=".55" stroke-width="2"/>
+    <path d="M27 78c0-15 12-24 19-28v148H35c-5 0-8-5-8-12z" fill="#fff9e9" opacity=".2"/>
+    <rect x="27" y="98" width="46" height="66" rx="4" fill="#f8efd8" opacity=".96"/><path d="M50 110c-10 11-10 26 0 38 10-12 10-27 0-38z" fill="#62764b"/><path d="M50 115v27" stroke="#d8b878" stroke-width="2"/>
+    <rect x="34" y="150" width="32" height="2" fill="#967c50"/><rect x="38" y="156" width="24" height="2" fill="#967c50"/>
   </symbol>
   <symbol id="leaf" viewBox="0 0 400 400"><g fill="currentColor"><path d="M200 390C196 280 200 140 200 10c70 70 90 190 0 380z"/><path d="M200 300C130 280 60 220 50 150c80 10 140 70 150 150z"/><path d="M200 250C270 230 340 170 350 100c-80 10-140 70-150 150z"/><path d="M200 340C150 330 100 300 80 260c60 0 100 30 120 80z"/></g></symbol>
 </svg>
@@ -547,9 +565,9 @@ footer{background:#e4d8bf;color:var(--walnut);border:1px solid var(--line)}
     <p>Huiles essentielles, huiles précieuses et végétales, CBD/CBG, diffuseurs, soins et parfums. Les huiles essentielles sont à un prix indicatif à remplacer.</p>
   </div>
   <div class="filters" id="gam"></div>
-  <div class="filters" id="need" style="margin-top:10px">
-    <button class="chip on" data-f="all">Tous les besoins</button><button class="chip" data-f="calme">Calme &amp; sommeil</button><button class="chip" data-f="respire">Respiration</button><button class="chip" data-f="tonus">Tonus</button><button class="chip" data-f="peau">Peau &amp; maison</button><button class="chip" data-f="digestion">Digestion &amp; épices</button>
-    <input class="search" id="q" type="search" placeholder="Rechercher un produit…" aria-label="Rechercher">
+  <div class="filters filter-needs" id="need" style="margin-top:10px">
+    <span class="filter-heading">Affiner</span><button class="chip on" data-f="all">Tous</button><button class="chip" data-f="calme">Calme &amp; sommeil</button><button class="chip" data-f="respire">Respiration</button><button class="chip" data-f="tonus">Tonus</button><button class="chip" data-f="peau">Peau &amp; maison</button><button class="chip" data-f="digestion">Digestion &amp; épices</button>
+    <span class="filter-status"><span id="filter-count">Tous les produits</span><button class="filter-reset" id="filter-reset" type="button">Réinitialiser</button></span><input class="search" id="q" type="search" placeholder="Rechercher un produit…" aria-label="Rechercher">
   </div>
   <p class="cap count" id="cnt" style="margin-top:20px"></p>
   <div class="gridwrap closed" id="gw"><div class="grid" id="grid"></div></div>
@@ -898,7 +916,7 @@ if(newsletterForm)newsletterForm.addEventListener('submit',async function(e){
 function apply(){var q=$('q').value.trim().toLowerCase(),v=0;
  $('need').children[0].parentNode.querySelectorAll('.chip').forEach(function(c){c.style.display=(G==='all'||G==='he')?'':'none'});
  document.querySelectorAll('.p').forEach(function(p){var ok=(G==='all'||p.dataset.g===G)&&(F==='all'||p.dataset.t===F)&&p.dataset.n.indexOf(q)>-1;p.classList.toggle('hide',!ok);if(ok)v++});
- $('none').style.display=v?'none':'block';$('cnt').textContent=v+' produits';sync()}
+ $('none').style.display=v?'none':'block';$('cnt').textContent=v+' produits';var fc=$('filter-count');if(fc)fc.textContent=(G==='all'&&F==='all'&&!q)?'Tous les produits':v+' résultat'+(v>1?'s':'');sync()}
 $('gam').addEventListener('click',function(e){var c=e.target.closest('.chip');if(!c)return;G=c.dataset.g;F='all';document.querySelectorAll('#gam .chip,#need .chip').forEach(function(x){x.classList.remove('on')});c.classList.add('on');$('need').querySelector('[data-f="all"]').classList.add('on');apply()});
 $('need').addEventListener('click',function(e){var c=e.target.closest('.chip');if(!c)return;F=c.dataset.f;document.querySelectorAll('#need .chip').forEach(function(x){x.classList.remove('on')});c.classList.add('on');apply()});
 $('q').addEventListener('input',apply);
@@ -1091,6 +1109,9 @@ document.addEventListener('click',function(e){var t=e.target,x;
  if(x=t.closest('[data-rmc]')){pcodes=pcodes.filter(function(c){return c.code!==x.dataset.rmc});draw();return}
  if(x=t.closest('[data-csv]')){csvOrders();return}
  if(x=t.closest('[data-cdel]')){if(!isS(me()))return;deletePromoRemote(+x.dataset.cdel).then(function(){toast('Code supprimé dans Supabase');redraw()}).catch(function(e){toast('Erreur Supabase : '+supabaseErrorMessage(e))});return}
+ if(x=t.closest('[data-fa]')){if(!isS(me()))return;var ai=+x.dataset.fa;setProd(ai,function(o){o.formats=fmtList(o).concat([{label:'Nouveau format',price:0,stock:null}])},1);$('pl').innerHTML=prdRows($('pq').value,$('pg').value);return}
+ if(x=t.closest('[data-fr]')){if(!isS(me()))return;var bits=x.dataset.fr.split(':'),ri=+bits[0],rn=+bits[1];setProd(ri,function(o){o.formats=fmtList(o).filter(function(_,j){return j!==rn})},1);$('pl').innerHTML=prdRows($('pq').value,$('pg').value);return}
+ if(x=t.closest('#filter-reset')){G='all';F='all';$('q').value='';document.querySelectorAll('#gam .chip,#need .chip').forEach(function(c){c.classList.toggle('on',c.dataset.g==='all'||c.dataset.f==='all')});apply();return}
  if(x=t.closest('[data-pdel]')){if(!isS(me())||!confirm('Supprimer ce produit de la boutique ?'))return;var ix=+x.dataset.pdel,o=ALL[ix];deleteProductRemote(o).then(function(){o.del=1;o.h=1;dirty=1;toast('Produit supprimé dans Supabase');redraw()}).catch(function(e){console.error(e);toast('Erreur Supabase : '+supabaseErrorMessage(e))});return}
  if(x=t.closest('[data-pir]')){if(!isS(me()))return;setProd(+x.dataset.pir,function(v){v.i=''},1);$('pl').innerHTML=prdRows($('pq').value,$('pg').value);toast('Photo retirée');return}
 if(t.closest('#nimgx')){newImg='';var fi=$('nimg');if(fi)fi.value='';nprev();return}
@@ -1107,6 +1128,7 @@ document.addEventListener('change',function(e){var t=e.target,d=t.dataset;if(t.i
 if(d.pp!==undefined){if(isNaN(v)||v<0){toast('Prix invalide');return}setProd(d.pp,function(x){x.p=v});return}
  if(d.pr!==undefined){setProd(d.pr,function(x){x.r=(isNaN(v)||v<=0)?0:v});return}
  if(d.ps!==undefined){setProd(d.ps,function(x){x.s=(t.value.trim()===''||isNaN(v))?null:Math.max(0,Math.floor(v))});return}
+ if(d.fl!==undefined||d.fp!==undefined||d.fs!==undefined){var fk=(d.fl||d.fp||d.fs).split(':'),fi=+fk[0],fn=+fk[1];setProd(fi,function(x){var fs=fmtList(x),z=fs[fn]||{label:'',price:0,stock:null};if(d.fl!==undefined)z.label=t.value.trim();if(d.fp!==undefined)z.price=Math.max(0,Number(t.value)||0);if(d.fs!==undefined)z.stock=t.value.trim()===''?null:Math.max(0,Math.floor(Number(t.value)||0));fs[fn]=z;x.formats=fs});return}
  if(d.pt!==undefined){setProd(d.pt,function(x){x.h=t.value==='hide';x.mo=t.value==='out'});return}
  if(d.tr!==undefined||d.nt!==undefined){var k=d.tr!==undefined;updOrder(k?d.tr:d.nt,function(o){if(k)o.tr=t.value.trim();else o.nt=t.value.trim()});toast('Enregistré');return}
  if(d.cs!==undefined){if(!isS(me()))return;savePromoRemote(+d.cs,{active:t.checked}).then(function(){toast(t.checked?'Code activé':'Code désactivé')}).catch(function(e){t.checked=!t.checked;toast('Erreur Supabase : '+supabaseErrorMessage(e))});return}
