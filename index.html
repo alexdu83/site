@@ -516,6 +516,27 @@ footer{background:#e4d8bf;color:var(--walnut);border:1px solid var(--line)}
 .why article:nth-of-type(3):before{background:var(--moss)}.why article:nth-of-type(3) .ico{background:var(--moss);color:#fff8ea;border:0}.why article h3{font-size:clamp(24px,2.5vw,34px);overflow-wrap:anywhere;hyphens:auto}
 @media(max-width:900px){.trust{grid-template-columns:1fr 1fr}.oils{grid-template-columns:1fr}.oil{min-height:0}.oil dl{min-height:0}}
 @media(max-width:520px){.trust{grid-template-columns:1fr}.trust-card{padding:18px 20px!important}.why article h3{font-size:27px}}
+
+/* ===== hero produit : composition éditoriale en deux colonnes ===== */
+.hero{min-height:0;height:auto;padding:28px clamp(22px,4vw,64px) clamp(34px,5vw,62px);background:linear-gradient(135deg,#f4ead6 0%,#e7d4ab 100%)}
+.hero-grid{display:grid!important;grid-template-columns:minmax(0,1.02fr) minmax(360px,.98fr);align-items:center;gap:clamp(28px,6vw,100px);max-width:1320px;width:100%;margin:clamp(58px,8vw,112px) auto 0;padding:0;flex:none}
+.hero-copy{min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+.hero .meta{width:100%;justify-content:flex-start;gap:20px;font-size:11px;letter-spacing:.04em}
+.word{font-size:clamp(66px,8.3vw,128px);line-height:.78;letter-spacing:-.045em;padding:16px 0 0;color:var(--deep)}
+.word .pre{display:block;font-size:clamp(26px,3.2vw,44px);line-height:1;font-style:italic;text-transform:none;letter-spacing:0;color:#a8742f;margin-bottom:10px}
+.word .pre::after{display:none}.word .name{display:block;white-space:normal;text-transform:uppercase}
+.hero-intro{max-width:560px;margin-top:28px;color:#5a4f39;font-size:15px;line-height:1.65}
+.hero-copy .ctas{margin-top:26px}
+.hero-copy .btn{padding:16px 19px;font-size:12px}
+.hero-markers{margin-top:26px;color:#8b7958;font-size:11px;letter-spacing:.08em;text-transform:uppercase;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.hero-markers b{font-weight:500;opacity:.6}
+.hero-product{position:relative;margin:0;min-height:clamp(410px,43vw,590px);display:flex;align-items:center;justify-content:center}
+.hero-product::before{content:"";position:absolute;inset:4% 0;background:radial-gradient(circle at 50% 40%,rgba(255,249,234,.65),transparent 62%);pointer-events:none}
+.hero-product img{position:relative;width:min(100%,590px);height:auto;display:block;border-radius:32px;box-shadow:0 24px 55px rgba(93,67,31,.13)}
+.hero-product figcaption{position:absolute;bottom:4%;right:3%;font:500 10px/1.45 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:#7a694b;background:rgba(250,246,236,.8);padding:9px 12px;border-radius:10px;text-align:right}
+.hero-product figcaption span{font-size:9px;opacity:.72}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr  minmax(280px,.8fr);gap:24px}.word{font-size:clamp(58px,9vw,94px)}.hero-product{min-height:360px}.hero-copy .ctas{flex-direction:column;align-items:stretch}.hero-copy .btn{text-align:center}}
+@media(max-width:640px){.hero{margin:10px;border-radius:28px;padding:22px 20px 28px}.hero-grid{grid-template-columns:1fr;gap:20px;margin-top:52px}.hero-product{order:-1;min-height:0;margin:0 auto;width:min(100%,330px)}.hero-product img{border-radius:22px}.hero-product figcaption{bottom:5%;right:4%;font-size:9px}.word{font-size:clamp(57px,17vw,80px);padding-top:12px}.word .pre{font-size:30px;margin-bottom:8px}.hero-intro{margin-top:20px;font-size:14px}.hero-copy .ctas{width:100%;margin-top:22px}.hero-copy .btn{width:100%}.hero-markers{margin-top:20px;font-size:10px;gap:7px}.hero .meta{display:none}}
 </style>
 </head>
 <body>
@@ -534,35 +555,7 @@ footer{background:#e4d8bf;color:var(--walnut);border:1px solid var(--line)}
 </svg>
 
 <header class="hero">
-  <svg class="leaf" aria-hidden="true"><use href="#leaf"/></svg>
-  <div class="flask" aria-hidden="true">
-    <i class="halo"></i>
-    <svg viewBox="0 0 200 330">
-      <defs>
-        <linearGradient id="gla" x1="0" x2="1"><stop offset="0" stop-color="#5a2a0d"/><stop offset=".35" stop-color="#a05a24"/><stop offset=".7" stop-color="#7a3c14"/><stop offset="1" stop-color="#4a2209"/></linearGradient>
-        <linearGradient id="oil" x1="0" x2="1"><stop offset="0" stop-color="#c9902e"/><stop offset=".5" stop-color="#f0c264"/><stop offset="1" stop-color="#b87a22"/></linearGradient>
-        <clipPath id="bd"><path d="M62 100h76c6 10 12 22 12 38v156c0 14-10 26-24 26H74c-14 0-24-12-24-26V138c0-16 6-28 12-38z"/></clipPath>
-      </defs>
-      <ellipse class="sh" cx="100" cy="323" rx="54" ry="6" fill="#000" opacity=".35"/>
-      <g class="fl">
-        <path d="M84 12c0-7 6-10 16-10s16 3 16 10v28H84z" fill="#1d1f1a"/>
-        <rect x="74" y="38" width="52" height="22" rx="5" fill="#2a2c25"/>
-        <path d="M80 60h40v42H80z" fill="url(#gla)"/>
-        <path d="M62 100h76c6 10 12 22 12 38v156c0 14-10 26-24 26H74c-14 0-24-12-24-26V138c0-16 6-28 12-38z" fill="url(#gla)"/>
-        <g clip-path="url(#bd)">
-          <g class="w2"><path d="M-100 158q25-9 50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0V340H-100z" fill="#b87a22" opacity=".55"/></g>
-          <g class="w1"><path d="M-100 150q25-9 50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0V340H-100z" fill="url(#oil)" opacity=".92"/></g>
-          <circle class="bb" cx="84" cy="285" r="2.6" fill="#fff6d8"/><circle class="bb" cx="118" cy="290" r="2" fill="#fff6d8"/><circle class="bb" cx="102" cy="292" r="3" fill="#fff6d8"/>
-          <g class="gl"><rect x="40" y="90" width="16" height="260" fill="#fff" opacity=".24" transform="skewX(-12)"/></g>
-        </g>
-        <rect x="66" y="196" width="68" height="84" rx="4" fill="#efe6cf"/>
-        <path d="M100 212c-12 10-12 26 0 36 12-10 12-26 0-36z" fill="#4f6b45"/><path d="M100 222v28" stroke="#efe6cf" stroke-width="1.5"/>
-        <rect x="80" y="258" width="40" height="2" fill="#8d866f"/><rect x="86" y="264" width="28" height="2" fill="#8d866f"/>
-        <rect x="57" y="112" width="6" height="170" rx="3" fill="#fff" opacity=".2"/>
-      </g>
-    </svg>
-  </div>
-  <nav>
+<nav>
     <ul>
       <li><a href="#boutique">Boutique</a></li>
       <li><a href="#coffrets">Coffrets</a></li>
@@ -571,13 +564,15 @@ footer{background:#e4d8bf;color:var(--walnut);border:1px solid var(--line)}
     </ul>
     <span class="tb"><a class="cart" href="#" data-acc>Connexion</a><a class="cart" href="#" id="open" aria-label="Ouvrir le panier">Panier <b id="count">0</b></a></span>
   </nav>
-  <div class="mid">
-    <div class="meta"><span>Huiles essentielles françaises</span><span>Agriculture biologique</span></div>
-    <h1 class="word" aria-label="Pierre Franchomme"><span class="pre" aria-hidden="true">Pierre</span><span class="name" aria-hidden="true"><span class="ch" style="--i:0">F</span><span class="ch" style="--i:1">r</span><span class="ch" style="--i:2">a</span><span class="ch" style="--i:3">n</span><span class="ch" style="--i:4">c</span><span class="ch" style="--i:5">h</span><span class="ch" style="--i:6">o</span><span class="ch" style="--i:7">m</span><span class="ch" style="--i:8">m</span><span class="ch" style="--i:9">e</span></span></h1>
-    <div class="hero-foot">
-      <p>Des huiles essentielles françaises, issues de l'agriculture biologique, conçues selon le savoir-faire de Pierre Franchomme et identifiées par leur chémotype et leur origine.</p>
+  <div class="mid hero-grid">
+    <div class="hero-copy">
+      <div class="meta"><span>Huiles essentielles françaises</span><span>Agriculture biologique</span></div>
+      <h1 class="word" aria-label="Pierre Franchomme"><span class="pre">Pierre</span><span class="name">Franchomme</span></h1>
+      <p class="hero-intro">Des huiles essentielles françaises, issues de l'agriculture biologique, conçues selon le savoir-faire de Pierre Franchomme et identifiées par leur chémotype et leur origine.</p>
       <div class="ctas"><a class="btn fill" href="#boutique">Découvrir les huiles essentielles</a><a class="btn" href="#coffrets">Composer mon coffret</a></div>
+      <p class="hero-markers" aria-label="Repères qualité"><span>Bio</span><b>·</b><span>Origine France</span><b>·</b><span>Chémotype garanti</span></p>
     </div>
+    <figure class="hero-product"><img src="hero-flacon.webp" alt="Flacon bleu cobalt — Huile précieuse au camélia, soin de nuit"><figcaption>Huile précieuse au camélia<br><span>Soin de nuit</span></figcaption></figure>
   </div>
 </header>
 
